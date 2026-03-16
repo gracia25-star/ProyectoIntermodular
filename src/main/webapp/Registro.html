@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso / Registro</title>
+    <!-- Enlazado con el archivo CSS -->
+    <link rel="stylesheet" href="css/Registro.css">
+</head>
+
+<body>
+    <h1 class="main-title">Edu-Gestión</h1>
+
+    <div class="container show-login" id="main-container">
+
+        <div class="tabs">
+            <div class="tab active" id="tab-login" onclick="switchTab('login')">Ingresar</div>
+            <div class="tab" id="tab-register" onclick="switchTab('register')">Registrarse</div>
+            <div class="tab-indicator"></div>
+        </div>
+
+        <div class="forms-wrapper">
+            <!-- Login Form -->
+            <div class="form-section" id="login-form-section">
+                <!-- El formulario ahora enviará los datos mediante POST al Servlet (ej: LoginServlet) -->
+                <form action="LoginServlet" method="POST">
+                    <div class="input-group">
+                        <label for="login-username">Usuario</label>
+                        <input type="text" id="login-username" name="usuario" placeholder="Tu usuario" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" name="contrasena" placeholder="Tu contraseña"
+                            required>
+                    </div>
+                    <button type="submit" class="submit-btn">Ingresar</button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div class="form-section" id="register-form-section">
+                <!-- El formulario ahora enviará los datos mediante POST al Servlet (ej: RegistroServlet) -->
+                <form action="RegistroServlet" method="POST">
+                    <div class="row">
+                        <div class="input-group">
+                            <label for="reg-name">Nombre</label>
+                            <input type="text" id="reg-name" name="nombre" placeholder="Juan" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="reg-lastname">Apellidos</label>
+                            <input type="text" id="reg-lastname" name="apellidos" placeholder="Pérez" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-email">Gmail</label>
+                        <input type="email" id="reg-email" name="gmail" placeholder="ejemplo@gmail.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" name="contrasena" placeholder="Crea una contraseña"
+                            required>
+                    </div>
+                    <div class="row">
+                        <div class="input-group">
+                            <label for="reg-phone">Teléfono</label>
+                            <input type="tel" id="reg-phone" name="telefono" placeholder="+34 123 456 789" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="reg-city">Ciudad</label>
+                            <input type="text" id="reg-city" name="ciudad" placeholder="Madrid" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">Crear Cuenta</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Enlazado con el archivo JS -->
+    <script src="js/Registro.js"></script>
+</body>
+
+</html>
