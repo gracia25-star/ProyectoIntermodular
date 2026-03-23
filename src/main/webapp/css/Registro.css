@@ -13,18 +13,44 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(180deg, #c70303 0%, #ffffff 100%);
+    background-image: url("../img/salesianos2.jpg");
+    background-size: cover;
     color: #333;
     gap: 30px;
 }
 
-h1.main-title {
-    color: white;
+.divTitle {
+    background-color: #c70303;
+    width: 100%;
+    height: 100px;
+    border-radius: 1px;
+    margin-bottom: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.divTitle img {
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.divTitle h1 {
+    color: rgb(217, 211, 211);
     font-size: 2.5rem;
     font-weight: 700;
     text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
     letter-spacing: -0.5px;
+    text-align: center;
 }
 
 .container {
@@ -41,41 +67,82 @@ h1.main-title {
 
 .tabs {
     display: flex;
+    gap: 10px;
     margin-bottom: 30px;
-    border-bottom: 2px solid #000000;
     position: relative;
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 14px;
+    padding: 6px;
 }
 
 .tab {
     flex: 1;
     text-align: center;
-    padding: 12px 0;
+    padding: 11px 0;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 16px;
-    color: #000000;
-    transition: color 0.3s ease;
-    background-color: #c70303;
-    border-color: #000000;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.4px;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    background: transparent;
     border-radius: 10px;
+    border: none;
+    transition: background 0.25s ease, color 0.25s ease,
+        transform 0.15s ease, box-shadow 0.25s ease;
+    user-select: none;
 }
 
-.tab.active {
-    color: #000000;
-    background-color: #c70303;
-    border-color: #000000;
-    border-radius: 10px;
+/* Hover sobre pestaña inactiva */
+.tab:not(.active):hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Press sobre pestaña inactiva */
+.tab:not(.active):active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Pestaña activa - Login (rojo) */
+.show-login .tab#tab-login,
+.show-register .tab#tab-register {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.show-login .tab#tab-login {
+    background: #c70303;
+    box-shadow: 0 6px 18px rgba(199, 3, 3, 0.5);
+}
+
+/* Pestaña activa - Registro (azul) */
+.show-register .tab#tab-register {
+    background: #c70303;
+    box-shadow: 0 6px 18px rgba(26, 86, 219, 0.5);
+}
+
+/* Hover sobre pestaña activa */
+.show-login .tab#tab-login:hover {
+    background: #8b0000;
+}
+
+.show-register .tab#tab-register:hover {
+    background: #c70303;
+}
+
+/* Press sobre pestaña activa */
+.tab.active:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 .tab-indicator {
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 50%;
-    height: 2px;
-    background-color: #000000;
-    transition: transform 0.3s ease;
-    border-radius: 10px;
+    display: none;
 }
 
 .forms-wrapper {
@@ -130,6 +197,7 @@ h1.main-title {
     flex: 1;
 }
 
+/* Botón base (pestaña Login - rojo) */
 button.submit-btn {
     width: 100%;
     padding: 14px;
@@ -140,13 +208,27 @@ button.submit-btn {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
     margin-top: 10px;
 }
 
-button.submit-btn:hover {
+/* Hover en pestaña Login → rojo más oscuro */
+.show-login button.submit-btn:hover {
+    background: #8b0000;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(135deg, #c70303 0%, #ffffff 100%);
+    box-shadow: 0 8px 20px rgba(199, 3, 3, 0.45);
+}
+
+/* Botón en pestaña Registro → azul */
+.show-register button.submit-btn {
+    background: #c70303;
+}
+
+/* Hover en pestaña Registro → azul más oscuro */
+.show-register button.submit-btn:hover {
+    background: #c70303;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(26, 86, 219, 0.45);
 }
 
 button.submit-btn:active {
