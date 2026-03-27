@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Principal - Edu-Gestión</title>
+    <link rel="stylesheet" href="css/Registro.css">
+    <link rel="stylesheet" href="css/Menu.css">
+    <!-- Chart.js para las gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- Banner superior igual que viewRegistro -->
+    <div class="divTitle">
+        <img src="img/SalesianosBaner.jpg" alt="Logo">
+        <div>
+            <h1 class="main-title">Edu-Gestión</h1>
+        </div>
+        <!-- Menú de usuario / Desloguear -->
+        <div class="user-menu">
+            <div class="user-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 22px; height: 22px;">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div class="user-dropdown">
+                <div class="user-dropdown-header">
+                    <div class="user-name">Usuario Gestor</div>
+                    <div class="user-role">Administrador</div>
+                </div>
+                <a href="viewRegistro.html" class="logout-btn">
+                    <span>Cerrar Sesión</span>
+
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-container">
+
+        <!-- Sección de gráficas -->
+        <section class="charts-section">
+            <div class="chart-card">
+                <h2 class="chart-title">Presupuestos Generales</h2>
+                <div class="chart-wrapper">
+                    <canvas id="chartPresupuestos"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h2 class="chart-title">Planes de Inversión</h2>
+                <div class="chart-wrapper">
+                    <canvas id="chartInversion"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de botones de navegación -->
+        <section class="nav-section">
+            <a href="viewDepartamentos.html" class="nav-btn">
+
+                <span>Departamentos</span>
+            </a>
+            <a href="viewPresupuestos.html" class="nav-btn">
+
+                <span>Presupuestos</span>
+            </a>
+            <a href="viewOrdenes.html" class="nav-btn">
+
+                <span>Órdenes de Compra</span>
+            </a>
+            <a href="viewProveedores.html" class="nav-btn">
+
+                <span>Proveedores</span>
+            </a>
+            <a href="viewProductos.html" class="nav-btn">
+
+                <span>Productos</span>
+            </a>
+        </section>
+
+    </div>
+
+    <script src="js/Menu.js"></script>
+</body>
+
+</html>

@@ -7,27 +7,56 @@
     font-family: 'Inter', sans-serif;
 }
 
+/* Animaciones globales de página */
+@keyframes fadeInPage {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOutPage {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
 body {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: url("../img/salesianos2.jpg");
-    background-size: cover;
+    background-color: #f4f5f7; /* Gris claro moderno por defecto */
     color: #333;
     gap: 30px;
+    padding-top: 120px;
+    
+    /* Transición de entrada por defecto al cargar la página */
+    animation: fadeInPage 0.4s ease-in-out forwards;
+}
+
+/* Solo las vistas con esta clase (ej: Login/Registro) tendrán la foto */
+body.bg-photo {
+    background-image: url("../img/salesianos2.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: transparent;
+}
+
+/* El JS añade esta clase justo antes de cambiar de página */
+body.fade-out {
+    animation: fadeOutPage 0.3s ease-in-out forwards;
 }
 
 .divTitle {
     background-color: #c70303;
     width: 100%;
     height: 100px;
-    border-radius: 1px;
-    margin-bottom: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-    position: relative;
+    border-radius: 0;
+    margin-bottom: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,7 +74,7 @@ body {
 }
 
 .divTitle h1 {
-    color: rgb(217, 211, 211);
+    color: rgb(255, 255, 255);
     font-size: 2.5rem;
     font-weight: 700;
     text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
