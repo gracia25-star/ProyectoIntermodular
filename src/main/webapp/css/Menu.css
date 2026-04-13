@@ -72,7 +72,7 @@
     color: #444;
     font-weight: 600;
     font-size: 15px;
-    padding: 10px 80px;
+    padding: 10px 70px;
     border-radius: 8px;
     transition: all 0.3s ease;
     position: relative;
@@ -223,6 +223,7 @@
         padding: 18px 10px;
     }
 }
+
 /* =========================================
    ESTILOS PARA TABLAS DE DATOS
    ========================================= */
@@ -241,7 +242,8 @@
 .data-table thead th {
     padding: 12px 10px;
     border-bottom: 2px solid #ddd;
-    background-color: #f8f9fa; /* Color de fondo suave para la cabecera */
+    background-color: #f8f9fa;
+    /* Color de fondo suave para la cabecera */
     color: #333;
     font-weight: bold;
 }
@@ -259,9 +261,20 @@
 }
 
 /* Colores para los estados */
-.status-green { color: #16a34a; font-weight: 600; }
-.status-orange { color: #d97706; font-weight: 600; }
-.status-red { color: #dc2626; font-weight: 600; }
+.status-green {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.status-orange {
+    color: #d97706;
+    font-weight: 600;
+}
+
+.status-red {
+    color: #dc2626;
+    font-weight: 600;
+}
 
 
 /* =========================================
@@ -277,7 +290,8 @@
 /* Hacer que los inputs crezcan por igual en una fila */
 .form-row .input-group {
     flex: 1;
-    margin-bottom: 0; /* Anula el margen inferior si ya lo tiene el row */
+    margin-bottom: 0;
+    /* Anula el margen inferior si ya lo tiene el row */
 }
 
 /* Modificadores para inputs que necesitan más espacio (ej: nombre del producto vs precio) */
@@ -298,6 +312,7 @@
         flex-direction: column;
         gap: 0;
     }
+
     .form-row .input-group {
         margin-bottom: 1rem;
     }
