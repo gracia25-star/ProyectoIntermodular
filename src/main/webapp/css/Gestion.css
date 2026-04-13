@@ -1,0 +1,73 @@
+/* 1. TABLAS DE DATOS (Inventario, Presupuestos...) */
+.table-container {
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.data-table thead th {
+    padding: 12px 10px;
+    border-bottom: 2px solid #ddd;
+    background-color: #f8f9fa; /* Gris muy suave para combinar con tu estilo */
+    color: #333;
+    font-weight: bold;
+}
+
+.data-table tbody td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    transition: background-color 0.2s ease;
+}
+
+/* Ilumina la fila al pasar el ratón */
+.data-table tbody tr:hover td {
+    background-color: #f1f5f9;
+}
+
+/* Colores de estado para las tablas */
+.status-green { color: #16a34a; font-weight: 600; }
+.status-orange { color: #d97706; font-weight: 600; }
+.status-red { color: #dc2626; font-weight: 600; }
+
+/* 2. FORMULARIOS EN COLUMNAS */
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.form-row .input-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Para inputs que necesitan ser más anchos que el de al lado */
+.form-row .flex-2 {
+    flex: 2;
+}
+
+/* Botón adaptado para que no ocupe toda la pantalla */
+.btn-auto {
+    width: auto;
+    padding: 10px 30px;
+    margin-top: 1rem;
+}
+
+/* Responsividad: en móviles los ponemos uno debajo del otro */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .form-row .input-group {
+        margin-bottom: 1rem;
+    }
+}
