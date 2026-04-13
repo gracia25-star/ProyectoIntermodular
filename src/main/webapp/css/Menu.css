@@ -223,9 +223,7 @@
         padding: 18px 10px;
     }
 }
-/* =========================================
-   ESTILOS PARA TABLAS DE DATOS
-   ========================================= */
+/* ESTILOS PARA TABLAS DE DATOS */
 .table-container {
     padding: 1.5rem;
     overflow-x: auto;
@@ -264,9 +262,7 @@
 .status-red { color: #dc2626; font-weight: 600; }
 
 
-/* =========================================
-   DISPOSICIÓN DE FORMULARIOS (FILAS FLEXIBLES)
-   ========================================= */
+/* DISPOSICIÓN DE FORMULARIOS (FILAS FLEXIBLES)*/
 .form-row {
     display: flex;
     gap: 1.5rem;
