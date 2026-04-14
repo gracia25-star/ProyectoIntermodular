@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
-    padding: 20px; 
+    padding: 20px;
     margin: 0 auto;
     padding-top: 100px;
 
@@ -61,7 +61,7 @@
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     display: flex;
-    gap: 16px;
+    gap: clamp(5px, 5vw, 100px);
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
@@ -224,10 +224,11 @@
         padding: 18px 10px;
     }
 }
+
 /* ESTILOS PARA TABLAS DE DATOS */
 img {
-  max-width: 100%;
-  height: auto;
+    max-width: 100%;
+    height: auto;
 }
 
 /* ESTILOS PARA TABLAS DE DATOS*/
@@ -318,5 +319,5 @@ img {
     .form-row .input-group {
         margin-bottom: 1rem;
     }
-    
+
 }
