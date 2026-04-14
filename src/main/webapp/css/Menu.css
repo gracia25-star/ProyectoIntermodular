@@ -1,14 +1,13 @@
 /* ===== MENU PAGE STYLES ===== */
-
 .menu-container {
     width: 100%;
     max-width: 1000px;
     display: flex;
     flex-direction: column;
     gap: 30px;
-    padding: 0 20px 40px;
-    margin-top: 60px;
-    /* Compensate for the new fixed top-nav */
+    padding: 20px; 
+    margin: 0 auto;
+    /* Elimina cualquier margin-top que haya aquí */
 }
 
 /* ===== CHARTS SECTION ===== */
@@ -50,10 +49,8 @@
 
 /* ===== TOP NAVIGATION BAR ===== */
 .top-nav {
-    position: fixed;
-    top: 100px;
-    /* Debajo del divTitle */
-    left: 0;
+    position: relative;
+    top: 0; /* Se detendrá exactamente debajo de tu divTitle */
     width: 100%;
     padding: 5px;
     background: rgba(255, 255, 255, 0.95);
@@ -64,7 +61,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 15px;
-    z-index: 99;
+    z-index: 99; /* Se mantiene debajo del divTitle que tiene z-index: 100 */
 }
 
 .top-nav-btn {
@@ -72,7 +69,7 @@
     color: #bd0f0f;
     font-weight: 600;
     font-size: 15px;
-    padding: 10px 70px;
+    padding: 10px 20px;
     border-radius: 8px;
     transition: all 0.3s ease;
     position: relative;
@@ -224,7 +221,10 @@
     }
 }
 /* ESTILOS PARA TABLAS DE DATOS */
-
+img {
+  max-width: 100%;
+  height: auto;
+}
 
 /* ESTILOS PARA TABLAS DE DATOS*/
 .table-container {
@@ -314,4 +314,5 @@
     .form-row .input-group {
         margin-bottom: 1rem;
     }
+    
 }

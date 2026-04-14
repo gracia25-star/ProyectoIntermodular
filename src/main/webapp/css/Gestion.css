@@ -10,7 +10,10 @@
     text-align: left;
     margin-top: 1rem;
 }
-
+img {
+  max-width: 100%;
+  height: auto;
+}
 .data-table thead th {
     padding: 12px 10px;
     border-bottom: 2px solid #ddd;
