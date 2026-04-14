@@ -7,6 +7,8 @@
     gap: 30px;
     padding: 20px; 
     margin: 0 auto;
+    padding-top: 100px;
+
     /* Elimina cualquier margin-top que haya aquí */
 }
 
@@ -49,19 +51,21 @@
 
 /* ===== TOP NAVIGATION BAR ===== */
 .top-nav {
-    position: relative;
-    top: 0; /* Se detendrá exactamente debajo de tu divTitle */
+    position: fixed;
+    top: 100px;
+    /* Debajo del divTitle */
+    left: 0;
     width: 100%;
     padding: 5px;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    z-index: 99; /* Se mantiene debajo del divTitle que tiene z-index: 100 */
+    z-index: 99;
 }
 
 .top-nav-btn {
