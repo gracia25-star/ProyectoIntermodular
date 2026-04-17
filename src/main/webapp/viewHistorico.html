@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico - Edu-Gestión</title>
+    <link rel="icon" href="img/logo-salesianos2.png" type="image/png">
+    <link rel="stylesheet" href="css/Registro.css">
+    <link rel="stylesheet" href="css/Menu.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="divTitle">
+        <img src="img/SalesianosBaner.jpg" alt="Logo">
+        <div>
+            <h1 class="main-title">Histórico</h1>
+        </div>
+
+        <div class="user-menu">
+            <div class="user-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div class="user-dropdown">
+                <div class="user-dropdown-header">
+                    <div class="user-name">Usuario</div>
+                    <div class="user-role" id="rolUsuario">Rol</div>
+                </div>
+                <a href="viewRegistro.html" class="logout-btn">Cerrar Sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="top-nav">
+        <a href="viewMenu.html" class="top-nav-btn">Menú</a>
+        <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
+        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes</a>
+        <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
+    </nav>
+
+    <div class="menu-container">
+
+        <!-- FILTRO HISTÓRICO (AQUÍ SÍ) -->
+        <div class="chart-card" style="margin-bottom:2rem;">
+            <h2 class="chart-title">Seleccionar Año</h2>
+            <div style="padding:1rem;">
+                <select>
+                    <option>2025</option>
+                    <option>2024</option>
+                    <option>2023</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- RESUMEN HISTÓRICO -->
+        <div class="chart-card" style="margin-bottom:2rem;">
+            <h2 class="chart-title">Resumen del Año</h2>
+            <div style="display:flex; gap:2rem; justify-content:space-between; padding:1.5rem; flex-wrap:wrap;">
+
+                <div style="flex:1; min-width:200px; text-align:center;">
+                    <p><strong>Total Asignado</strong></p>
+                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">30,000 €</div>
+                </div>
+
+                <div style="flex:1; min-width:200px; text-align:center;">
+                    <p><strong>Total Gastado</strong></p>
+                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">25,000 €</div>
+                </div>
+
+                <div style="flex:1; min-width:200px; text-align:center;">
+                    <p><strong>Total Restante</strong></p>
+                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">5,000 €</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TABLA HISTÓRICO PRESUPUESTOS -->
+        <div class="chart-card" style="margin-bottom:2rem;">
+            <h2 class="chart-title">Presupuestos del Año</h2>
+
+            <div style="padding:1.5rem; overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr>
+                            <th>Departamento</th>
+                            <th>Asignado</th>
+                            <th>Gastado</th>
+                            <th>Restante</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Informática</td>
+                            <td>15000€</td>
+                            <td>12000€</td>
+                            <td>3000€</td>
+                            <td style="color:green;">Cerrado</td>
+                        </tr>
+                        <tr>
+                            <td>Mantenimiento</td>
+                            <td>15000€</td>
+                            <td>13000€</td>
+                            <td>2000€</td>
+                            <td style="color:green;">Cerrado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PLANES DE INVERSIÓN HISTÓRICOS -->
+        <div class="chart-card">
+            <h2 class="chart-title">Planes de Inversión</h2>
+
+            <div style="padding:1.5rem; overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr>
+                            <th>Nº Plan</th>
+                            <th>Departamento</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0001234</td>
+                            <td>Informática</td>
+                            <td>Compra de ordenadores</td>
+                        </tr>
+                        <tr>
+                            <td>0005678</td>
+                            <td>Mantenimiento</td>
+                            <td>Reparación de instalaciones</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const rol = sessionStorage.getItem("rol");
+        document.getElementById("rolUsuario").innerText = rol || "Usuario";
+    </script>
+
+</body>
+</html>

@@ -8,91 +8,178 @@
     <link rel="icon" href="img/logo-salesianos2.png" type="image/png">
     <link rel="stylesheet" href="css/Registro.css">
     <link rel="stylesheet" href="css/Menu.css">
-    <link rel="stylesheet" href="css/Gestion.css">
 </head>
 
 <body>
 
+    <!-- HEADER -->
     <div class="divTitle">
         <img src="img/SalesianosBaner.jpg" alt="Logo">
         <div>
-            <h1 class="main-title"> Presupuestos</h1>
+            <h1 class="main-title">Presupuestos</h1>
         </div>
+
         <div class="user-menu">
             <div class="user-avatar">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" style="width: 22px; height: 22px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
             </div>
             <div class="user-dropdown">
                 <div class="user-dropdown-header">
-                    <div class="user-name">Usuario Gestor</div>
-                    <div class="user-role">Administrador</div>
+                    <div class="user-name">Usuario</div>
+                    <div class="user-role" id="rolUsuario">Rol</div>
                 </div>
-                <a href="viewRegistro.html" class="logout-btn">
-                    <span>Cerrar Sesión</span>
-                </a>
+                <a href="viewRegistro.html" class="logout-btn">Cerrar Sesión</a>
             </div>
         </div>
     </div>
 
+    <!-- NAV -->
     <nav class="top-nav">
-        <a href="viewMenu.html" class="top-nav-btn">Menu</a>
-        <a href="viewDepartamentos.html" class="top-nav-btn">Departamentos</a>
-        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de Compra</a>
+        <a href="viewMenu.html" class="top-nav-btn">Menú</a>
+        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de compra</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
-        <a href="viewProducto.html" class="top-nav-btn">Productos</a>
+        <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
     </nav>
 
     <div class="menu-container">
 
+        <!-- INFORMACIÓN AÑO ACTUAL -->
         <div class="chart-card" style="margin-bottom: 2rem;">
-            <h2 class="chart-title">Asignar Nuevo Presupuesto</h2>
+            <h2 class="chart-title">Año Actual</h2>
+            <div style="padding: 1rem;">
+                <strong id="anioActual"></strong>
+            </div>
+        </div>
+
+        <!-- PRESUPUESTO -->
+        <div class="chart-card" style="margin-bottom: 2rem;">
+            <h2 class="chart-title">Asignar Presupuesto</h2>
+
             <div class="form-section" style="padding: 1.5rem;">
-                <form action="#" method="POST">
-                    <div class="row" style="display: flex; gap: 1rem;">
-                        <div class="input-group" style="flex: 1;">
-                            <label for="presupuesto-dep">Departamento</label>
-                            <input type="text" id="presupuesto-dep" name="departamento" placeholder="Ej. Informática"
-                                required>
+                <form>
+                    <div class="row" style="display:flex; gap:1rem;">
+                        <div class="input-group" style="flex:1;">
+                            <label>Departamento</label>
+                            <input type="text" placeholder="Ej. Informática">
                         </div>
-                        <div class="input-group" style="flex: 1;">
-                            <label for="presupuesto-monto">Monto Total (€)</label>
-                            <input type="number" id="presupuesto-monto" name="monto" placeholder="Ej. 15000" required>
+                        <div class="input-group" style="flex:1;">
+                            <label>Monto Asignado (€)</label>
+                            <input type="number">
                         </div>
                     </div>
-                    <button type="submit" class="submit-btn"
-                        style="width: auto; padding: 10px 30px; margin-top: 1rem;">Guardar Presupuesto</button>
+
+                    <div class="row" style="display:flex; gap:1rem;">
+                        <div class="input-group" style="flex:1;">
+                            <label>Monto Gastado (€)</label>
+                            <input type="number">
+                        </div>
+                        <div class="input-group" style="flex:1;">
+                            <label>Estado</label>
+                            <select>
+                                <option>Aprobado</option>
+                                <option>Pendiente</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="submit-btn">Guardar</button>
                 </form>
             </div>
         </div>
 
+        <!-- RESUMEN PRESUPUESTO (COMO EN PIZARRA) -->
+        <div class="chart-card" style="margin-bottom:2rem;">
+            <h2 class="chart-title">Resumen del Presupuesto</h2>
+            <div style="display:flex; gap:2rem; justify-content:space-between; padding:1.5rem; flex-wrap:wrap;">
+                <div style="flex:1; min-width:200px; text-align:center;">
+                    <p><strong>Asignado</strong></p>
+                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">15,000 €</div>
+                </div>
+                <div style="flex:1; min-width:200px; text-align:center;">
+                    <p><strong>Gastado</strong></p>
+                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">5,000 €</div>
+                </div>
+                <div style="flex:1; min-width:200px; text-align:center;">
+                    <p><strong>Restante</strong></p>
+                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">10,000 €</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA PRESUPUESTOS -->
         <div class="chart-card">
-            <h2 class="chart-title">Presupuestos Actuales</h2>
-            <div style="padding: 1.5rem; overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead style="border-bottom: 2px solid #eee;">
+            <h2 class="chart-title">Presupuestos</h2>
+
+            <div style="padding:1.5rem; overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
                         <tr>
-                            <th style="padding: 10px;">ID</th>
-                            <th style="padding: 10px;">Departamento</th>
-                            <th style="padding: 10px;">Monto Asignado</th>
-                            <th style="padding: 10px;">Estado</th>
+                            <th>ID</th>
+                            <th>Departamento</th>
+                            <th>Año</th>
+                            <th>Asignado</th>
+                            <th>Gastado</th>
+                            <th>Restante</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 10px;">PRE-001</td>
-                            <td style="padding: 10px;">Informática</td>
-                            <td style="padding: 10px;">15,000 €</td>
-                            <td style="padding: 10px; color: green;">Aprobado</td>
+                        <tr>
+                            <td>1</td>
+                            <td>Informática</td>
+                            <td>2026</td>
+                            <td>15000€</td>
+                            <td>5000€</td>
+                            <td>10000€</td>
+                            <td>
+                                <button class="submit-btn">Editar</button>
+                                <button class="submit-btn">Eliminar</button>
+                            </td>
                         </tr>
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 10px;">PRE-002</td>
-                            <td style="padding: 10px;">Mantenimiento</td>
-                            <td style="padding: 10px;">8,500 €</td>
-                            <td style="padding: 10px; color: orange;">Pendiente</td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PLAN DE INVERSION -->
+        <div class="chart-card" style="margin-top:2rem;">
+            <h2 class="chart-title">Plan de Inversión</h2>
+
+            <div class="form-section" style="padding:1.5rem;">
+                <form>
+                    <div class="input-group">
+                        <label>Número de Plan (7 dígitos)</label>
+                        <input type="text" placeholder="0001234">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Descripción</label>
+                        <textarea></textarea>
+                    </div>
+
+                    <button class="submit-btn">Guardar Plan</button>
+                </form>
+            </div>
+
+            <div style="padding:1.5rem; overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Año</th>
+                            <th>Plan</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2026</td>
+                            <td>0001234</td>
+                            <td>Compra de equipos</td>
                         </tr>
                     </tbody>
                 </table>
@@ -101,7 +188,19 @@
 
     </div>
 
-    <script src="js/Menu.js"></script>
-</body>
+    <script>
+        const rol = sessionStorage.getItem("rol");
+        document.getElementById("rolUsuario").innerText = rol || "Usuario";
 
+        // Mostrar año actual automáticamente
+        const anio = new Date().getFullYear();
+        document.getElementById("anioActual").innerText = anio;
+
+        // Restricciones por rol
+        if (rol === "contable") {
+            document.querySelectorAll("button").forEach(btn => btn.disabled = true);
+        }
+    </script>
+
+</body>
 </html>

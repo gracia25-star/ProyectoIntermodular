@@ -126,7 +126,7 @@ body.fade-out {
     border-radius: 10px;
     border: none;
     transition: background 0.25s ease, color 0.25s ease,
-        transform 0.15s ease, box-shadow 0.25s ease;
+    transform 0.15s ease, box-shadow 0.25s ease;
     user-select: none;
 }
 
