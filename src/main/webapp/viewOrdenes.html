@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Órdenes de Compra - Edu-Gestión</title>
+    <link rel="icon" href="img/logo-salesianos2.png" type="image/png">
+    <link rel="stylesheet" href="css/Registro.css">
+    <link rel="stylesheet" href="css/Menu.css">
+    <link rel="stylesheet" href="css/Ordenes.css">
+</head>
+
+<body>
+
+    <!-- Banner superior -->
+    <div class="divTitle">
+        <img src="img/SalesianosBaner.jpg" alt="Logo">
+        <div>
+            <h1 class="main-title">Edu-Gestión</h1>
+        </div>
+        <div class="user-menu">
+            <div class="user-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 22px; height: 22px;">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div class="user-dropdown">
+                <div class="user-dropdown-header">
+                    <div class="user-name">Usuario Gestor</div>
+                    <div class="user-role">Jefe de Departamento</div>
+                </div>
+                <a href="viewRegistro.html" class="logout-btn">
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de navegación secundaria -->
+    <nav class="top-nav">
+        <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
+        <a href="viewOrdenes.html" class="top-nav-btn active-nav">Órdenes de Compra</a>
+        <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
+        <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
+    </nav>
+
+    <div class="menu-container">
+
+        <!-- ── Formulario nueva orden ── -->
+        <section class="chart-card orden-form-card">
+            <h2 class="chart-title">Nueva Orden de Compra</h2>
+
+            <div class="orden-form">
+
+                <!-- Fila 1: Fecha · Proveedor · Importe -->
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="orden-fecha">Fecha</label>
+                        <input type="date" id="orden-fecha" name="fecha">
+                    </div>
+                    <div class="input-group flex-2">
+                        <label for="orden-proveedor">Proveedor</label>
+                        <select id="orden-proveedor" name="proveedor" class="input-select">
+                            <option value="" disabled selected>Selecciona un proveedor…</option>
+                            <option value="1">Distribuciones García S.L.</option>
+                            <option value="2">TechSupply España</option>
+                            <option value="3">Papelería Martínez</option>
+                            <option value="4">Suministros Industriales Norte</option>
+                            <option value="5">Informática del Ebro</option>
+                            <option value="6">Electrónica Zaragoza S.A.</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="orden-importe">Importe (€)</label>
+                        <input type="number" id="orden-importe" name="importe" placeholder="0,00" min="0" step="0.01">
+                    </div>
+                </div>
+
+                <!-- Fila 2: Descripción · PDF -->
+                <div class="form-row">
+                    <div class="input-group flex-2">
+                        <label for="orden-descripcion">Descripción</label>
+                        <input type="text" id="orden-descripcion" name="descripcion" placeholder="Descripción del pedido…">
+                    </div>
+                    <div class="input-group">
+                        <label for="orden-pdf">Adjuntar factura (PDF)</label>
+                        <label class="file-label" for="orden-pdf">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="file-icon">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span id="file-name-label">Seleccionar archivo…</span>
+                        </label>
+                        <input type="file" id="orden-pdf" name="factura" accept=".pdf" class="file-input-hidden">
+                    </div>
+                </div>
+
+                <!-- Botón -->
+                <div class="form-row form-row-btn">
+                    <button class="submit-btn btn-auto" onclick="crearOrden()">
+                        + Crear Orden de Compra
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ── Tabla de órdenes ── -->
+        <section class="chart-card orden-table-card">
+            <h2 class="chart-title">Mis Órdenes</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nº Referencia</th>
+                            <th>Fecha</th>
+                            <th>Proveedor</th>
+                            <th>Importe</th>
+                            <th>Estado</th>
+                            <th>Factura</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordenes-tbody">
+                        <!-- Filas de ejemplo — en producción vendrán del back -->
+                        <tr>
+                            <td class="ref-cell">ORD-2025-001</td>
+                            <td>12/01/2025</td>
+                            <td>Informática del Ebro</td>
+                            <td class="importe-cell">1.250,00 €</td>
+                            <td><span class="status-badge status-green">Aprobada</span></td>
+                            <td><a href="#" class="pdf-link" title="Ver factura">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                                PDF
+                            </a></td>
+                            <td><button class="notas-btn has-nota" onclick="abrirNotas(this)" data-desc="Compra de 10 licencias software educativo" data-obs="Aprobado por dirección el 15/01">💬</button></td>
+                        </tr>
+                        <tr>
+                            <td class="ref-cell">ORD-2025-002</td>
+                            <td>28/01/2025</td>
+                            <td>TechSupply España</td>
+                            <td class="importe-cell">3.800,00 €</td>
+                            <td><span class="status-badge status-orange">Pendiente</span></td>
+                            <td><span class="no-pdf">—</span></td>
+                            <td><button class="notas-btn has-nota" onclick="abrirNotas(this)" data-desc="Equipos de laboratorio para taller mecánica" data-obs="">💬</button></td>
+                        </tr>
+                        <tr>
+                            <td class="ref-cell">ORD-2025-003</td>
+                            <td>05/02/2025</td>
+                            <td>Papelería Martínez</td>
+                            <td class="importe-cell">420,50 €</td>
+                            <td><span class="status-badge status-red">Rechazada</span></td>
+                            <td><a href="#" class="pdf-link" title="Ver factura">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                                PDF
+                            </a></td>
+                            <td><button class="notas-btn has-nota" onclick="abrirNotas(this)" data-desc="Material de oficina trimestre 1" data-obs="Rechazada: excede presupuesto disponible">💬</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ── Popup de Notas ── -->
+    <div id="notas-overlay" class="notas-overlay" onclick="cerrarNotas(event)">
+        <div class="notas-popup">
+            <button class="notas-close" onclick="cerrarNotasBtn()">✕</button>
+            <h3 class="notas-titulo">Notas de la orden</h3>
+            <div class="notas-seccion">
+                <label class="notas-label">Descripción del jefe de departamento</label>
+                <p id="notas-desc" class="notas-texto"></p>
+            </div>
+            <div class="notas-seccion">
+                <label class="notas-label">Observaciones</label>
+                <p id="notas-obs" class="notas-texto notas-obs-vacia"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/Ordenes.js"></script>
+</body>
+
+</html>

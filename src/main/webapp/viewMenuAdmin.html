@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador - Edu-Gestión</title>
+    <link rel="icon" href="img/logo-salesianos2.png" type="image/png">
+    <link rel="stylesheet" href="css/Registro.css">
+    <link rel="stylesheet" href="css/Menu.css">
+    <link rel="stylesheet" href="css/MenuAdmin.css">
+    <!-- Chart.js para las gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- Banner superior igual que viewRegistro -->
+    <div class="divTitle">
+        <img src="img/SalesianosBaner.jpg" alt="Logo">
+        <div>
+            <h1 class="main-title">Edu-Gestión</h1>
+        </div>
+        <!-- Menú de usuario / Desloguear -->
+        <div class="user-menu">
+            <div class="user-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="width: 22px; height: 22px;">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div class="user-dropdown">
+                <div class="user-dropdown-header">
+                    <div class="user-name">Usuario Admin</div>
+                    <div class="user-role">Administrador</div>
+                </div>
+                <a href="viewRegistro.html" class="logout-btn">
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de navegación secundaria (ancho completo) -->
+    <nav class="top-nav">
+        <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
+        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de Compra</a>
+        <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
+        <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
+    </nav>
+
+    <div class="menu-container">
+
+        <!-- Barra de acceso rápido por departamento -->
+        <section class="chart-card filtro-card-menu">
+            <div class="filtro-row-menu">
+                <label for="menu-filtro-depto" class="filtro-label-menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    Ver órdenes del departamento
+                </label>
+                <select id="menu-filtro-depto" class="input-select filtro-select-menu">
+                    <option value="" disabled selected>Selecciona un departamento…</option>
+                    <option value="INFO">Informática (INFO)</option>
+                    <option value="MECA">Mecánica (MECA)</option>
+                    <option value="ELTA">Electricidad (ELTA)</option>
+                    <option value="AUTO">Automoción (AUTO)</option>
+                    <option value="FPGB">Grado Básico (FPGB)</option>
+                    <option value="TELE">Telecomunicaciones (TELE)</option>
+                    <option value="ROBO">Robótica (ROBO)</option>
+                    <option value="PRI">Primaria (PRI)</option>
+                    <option value="INF">Infantil (INF)</option>
+                    <option value="ESO">Secundaria (ESO)</option>
+                    <option value="BAC">Bachillerato (BAC)</option>
+                    <option value="SAT">SAT (SAT)</option>
+                    <option value="MANT">Mantenimiento (MANT)</option>
+                    <option value="PDB">Premio Don Bosco (PDB)</option>
+                    <option value="FOR">Formación (FOR)</option>
+                    <option value="ADM">Administración (ADM)</option>
+                </select>
+                <button class="submit-btn btn-auto btn-ir-depto" onclick="irADepto()">
+                    Ver órdenes →
+                </button>
+            </div>
+        </section>
+
+        <!-- Sección de gráficas admin: barras horizontales apiladas -->
+        <section class="charts-section admin-charts-section">
+
+            <!-- Gráfica de Presupuestos -->
+            <div class="chart-card admin-chart-card">
+                <h2 class="chart-title">Presupuestos</h2>
+                <div class="admin-chart-wrapper">
+                    <canvas id="chartPresupuestosAdmin"></canvas>
+                </div>
+                <!-- Leyenda personalizada -->
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-dot legend-gastado"></span>Gastado</span>
+                    <span class="legend-item"><span class="legend-dot legend-total"></span>Disponible</span>
+                </div>
+            </div>
+
+            <!-- Gráfica de Planes de Inversión -->
+            <div class="chart-card admin-chart-card">
+                <h2 class="chart-title">Planes de Inversión</h2>
+                <div class="admin-chart-wrapper">
+                    <canvas id="chartInversionAdmin"></canvas>
+                </div>
+                <!-- Leyenda personalizada -->
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-dot legend-gastado"></span>Gastado</span>
+                    <span class="legend-item"><span class="legend-dot legend-total"></span>Disponible</span>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <script src="js/MenuAdmin.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,281 @@
+/* ===== ORDENES DE COMPRA - ESTILOS ESPECÍFICOS ===== */
+/* Complementa Registro.css y Menu.css                 */
+
+/* ── Tarjeta del formulario ── */
+.orden-form-card {
+    width: 100%;
+}
+
+/* ── Tarjeta de la tabla ── */
+.orden-table-card {
+    width: 100%;
+    padding: 28px 24px 20px;
+}
+
+/* ── Formulario ── */
+.orden-form {
+    width: 100%;
+}
+
+/* Fila del botón: alineada a la derecha */
+.form-row-btn {
+    justify-content: flex-end;
+    margin-bottom: 0;
+}
+
+/* ── Select con el mismo aspecto que los inputs ── */
+.input-select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    background: #f9f9fa;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.input-select:focus {
+    outline: none;
+    border-color: #000000;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1);
+}
+
+/* ── Input file oculto + label personalizado ── */
+.file-input-hidden {
+    display: none;
+}
+
+.file-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 15px;
+    border: 1px dashed #bbb;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #666;
+    background: #f9f9fa;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+}
+
+.file-label:hover {
+    border-color: #c70303;
+    color: #c70303;
+    background: #fff5f5;
+}
+
+.file-label.has-file {
+    border-color: #16a34a;
+    color: #16a34a;
+    background: #f0fdf4;
+    border-style: solid;
+}
+
+.file-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ── Tabla ── */
+
+/* Número de referencia en monospace para alineación */
+.ref-cell {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: #444 !important;
+    letter-spacing: 0.3px;
+}
+
+/* Importe alineado a la derecha */
+.importe-cell {
+    text-align: right;
+    font-weight: 600 !important;
+    color: #333 !important;
+}
+
+/* Badges de estado */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.status-badge.status-green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-badge.status-orange {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-badge.status-red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Link PDF */
+.pdf-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #c70303;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.pdf-link:hover {
+    opacity: 0.7;
+}
+
+.pdf-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.no-pdf {
+    color: #ccc;
+    font-size: 16px;
+}
+
+/* Nav activo */
+.top-nav-btn.active-nav {
+    color: #c70303;
+    background: rgba(199, 3, 3, 0.08);
+}
+
+.top-nav-btn.active-nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 3px;
+    background: #c70303;
+    border-radius: 2px;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 768px) {
+    .importe-cell {
+        text-align: left;
+    }
+}
+
+/* ── Botón de notas en la tabla ── */
+.notas-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    opacity: 0.35;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.notas-btn.has-nota {
+    opacity: 1;
+}
+
+.notas-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* ── Popup de notas (jefe, solo lectura) ── */
+.notas-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+}
+
+.notas-popup {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.notas-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.notas-close:hover { color: #333; }
+
+.notas-titulo {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 18px;
+}
+
+.notas-seccion {
+    margin-bottom: 14px;
+}
+
+.notas-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.notas-texto {
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #444;
+    min-height: 38px;
+}
+
+.notas-obs-vacia {
+    color: #bbb;
+    font-style: italic;
+}

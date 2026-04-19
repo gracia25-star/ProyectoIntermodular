@@ -1,0 +1,117 @@
+/* ===== MENU ADMIN - ESTILOS ESPECÍFICOS ===== */
+/* Este archivo complementa Menu.css y Registro.css */
+
+/* ── Barra de acceso rápido por departamento ── */
+.filtro-card-menu {
+    width: 100%;
+    padding: 18px 28px;
+}
+
+.filtro-row-menu {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.filtro-label-menu {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #444;
+    white-space: nowrap;
+}
+
+.filtro-select-menu {
+    flex: 1;
+    max-width: 340px;
+}
+
+.btn-ir-depto {
+    margin-top: 0;
+    padding: 10px 22px;
+    white-space: nowrap;
+}
+
+/* Sección de gráficas: flex row, paralelas */
+.admin-charts-section {
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* Tarjeta de gráfica admin: ocupa mitad del espacio */
+.admin-chart-card {
+    flex: 1;
+    padding: 28px 24px 20px;
+}
+
+/* Altura proporcional a los departamentos */
+.admin-chart-wrapper {
+    width: 100%;
+    height: 520px;
+    position: relative;
+}
+
+.admin-chart-wrapper canvas {
+    width: 100% !important; /*important is a declaration that forces a CSS rule to take priority over others*/
+    height: 100% !important;
+}
+
+/* ===== LEYENDA PERSONALIZADA ===== */
+.chart-legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #555;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.legend-total {
+    background-color: #82a87ce7;
+}
+
+.legend-gastado {
+    background-color: #c96464f3;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .admin-charts-section {
+        flex-direction: column;
+    }
+
+    .admin-chart-wrapper {
+        height: 480px;
+    }
+}
+
+@media (max-width: 680px) {
+    .admin-chart-wrapper {
+        height: 400px;
+    }
+
+    .admin-chart-card {
+        padding: 20px 14px 14px;
+    }
+}
