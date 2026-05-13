@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="css/Menu.css">
     <link rel="stylesheet" href="css/Ordenes.css">
     <link rel="stylesheet" href="css/OrdenesAdmin.css">
+    <style>body{visibility:hidden}</style>
+    <script>
+        fetch('SesionServlet').then(r=>r.json()).then(d=>{
+            if(d.role==='dept_manager') window.location.replace('viewOrdenes.html');
+            else document.body.style.visibility='visible';
+        }).catch(()=>{document.body.style.visibility='visible'});
+    </script>
 </head>
 
 <body>
@@ -18,7 +25,7 @@
     <div class="divTitle">
         <img src="img/SalesianosBaner.jpg" alt="Logo">
         <div>
-            <h1 class="main-title">Edu-Gestión</h1>
+            <h1 class="main-title">Ordenes de Compra</h1>
         </div>
         <div class="user-menu">
             <div class="user-avatar">

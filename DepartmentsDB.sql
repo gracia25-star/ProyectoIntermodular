@@ -246,3 +246,57 @@ SET DEFAULT ROLE 'role_jefe' TO
 
 FLUSH PRIVILEGES; -- para refrescar memoria cacheada
 
+-- ============================================================
+--  Procedimientos almacenados: datos filtrados por departamento
+--  Todos reciben el Id_user del jefe logueado y devuelven
+--  únicamente los registros que pertenecen a su departamento.
+-- ============================================================
+
+DELIMITER $$
+
+-- Presupuestos del departamento del jefe
+DROP PROCEDURE IF EXISTS GetBudgetsByUser$$
+CREATE PROCEDURE GetBudgetsByUser(IN p_id_user INT UNSIGNED)
+BEGIN
+    SELECT b.*
+    FROM budget b
+    JOIN `user` u ON b.Code_dept = u.Code_dept
+    WHERE u.Id_user = p_id_user;
+END$$
+
+-- Órdenes de compra del departamento del jefe
+DROP PROCEDURE IF EXISTS GetOrdersByUser$$
+CREATE PROCEDURE GetOrdersByUser(IN p_id_user INT UNSIGNED)
+BEGIN
+    SELECT po.*
+    FROM purchase_order po
+    JOIN budget b ON po.Id_budget = b.Id_budget
+    JOIN `user` u ON b.Code_dept  = u.Code_dept
+    WHERE u.Id_user = p_id_user;
+END$$
+
+-- Proveedores asociados al departamento del jefe
+DROP PROCEDURE IF EXISTS GetSuppliersByUser$$
+CREATE PROCEDURE GetSuppliersByUser(IN p_id_user INT UNSIGNED)
+BEGIN
+    SELECT s.*
+    FROM supplier s
+    JOIN Dept_Supplier ds ON s.Id_supplier = ds.Id_supplier
+    JOIN `user` u         ON ds.Code_dept  = u.Code_dept
+    WHERE u.Id_user = p_id_user;
+END$$
+
+-- Facturas de las órdenes del departamento del jefe
+DROP PROCEDURE IF EXISTS GetInvoicesByUser$$
+CREATE PROCEDURE GetInvoicesByUser(IN p_id_user INT UNSIGNED)
+BEGIN
+    SELECT i.*
+    FROM invoice i
+    JOIN purchase_order po ON i.Code_order  = po.Code_order
+    JOIN budget b          ON po.Id_budget  = b.Id_budget
+    JOIN `user` u          ON b.Code_dept   = u.Code_dept
+    WHERE u.Id_user = p_id_user;
+END$$
+
+DELIMITER ;
+

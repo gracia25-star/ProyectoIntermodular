@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="css/MenuAdmin.css">
     <!-- Chart.js para las gráficas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>body{visibility:hidden}</style>
+    <script>
+        fetch('SesionServlet').then(r=>r.json()).then(d=>{
+            if(d.role==='dept_manager') window.location.replace('viewMenu.html');
+            else document.body.style.visibility='visible';
+        }).catch(()=>{document.body.style.visibility='visible'});
+    </script>
 </head>
 
 <body>
@@ -45,7 +52,7 @@
     <!-- Barra de navegación secundaria (ancho completo) -->
     <nav class="top-nav">
         <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
-        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de Compra</a>
+        <a href="viewOrdenesAdmin.html" class="top-nav-btn">Órdenes de Compra</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
     </nav>

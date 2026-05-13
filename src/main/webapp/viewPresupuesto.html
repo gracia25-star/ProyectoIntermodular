@@ -8,6 +8,13 @@
     <link rel="icon" href="img/logo-salesianos2.png" type="image/png">
     <link rel="stylesheet" href="css/Registro.css">
     <link rel="stylesheet" href="css/Menu.css">
+    <style>body{visibility:hidden}</style>
+    <script>
+        fetch('SesionServlet').then(r=>r.json()).then(d=>{
+            if(d.role==='admin'||d.role==='accountant') window.location.replace('viewMenuAdmin.html');
+            else document.body.style.visibility='visible';
+        }).catch(()=>{document.body.style.visibility='visible'});
+    </script>
 </head>
 
 <body>
