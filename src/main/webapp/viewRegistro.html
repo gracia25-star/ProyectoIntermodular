@@ -47,7 +47,6 @@
 
             <!-- Register Form -->
             <div class="form-section" id="register-form-section">
-                <!-- El formulario ahora enviará los datos mediante POST al Servlet (ej: RegistroServlet) -->
                 <form action="RegistroServlet" method="POST">
                     <div class="input-group">
                         <label for="reg-name">Nombre</label>
@@ -60,6 +59,19 @@
                     <div class="input-group">
                         <label for="reg-password">Contraseña</label>
                         <input type="password" id="reg-password" name="contrasena" placeholder="Crea una contraseña" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-rol">Rol / Departamento</label>
+                        <select id="reg-rol" name="rol" required>
+                            <option value="" disabled selected>Selecciona rol o departamento…</option>
+                            <optgroup label="Roles de gestión">
+                                <option value="admin">Administrador</option>
+                                <option value="accountant">Contable</option>
+                            </optgroup>
+                            <optgroup label="Jefe de Departamento" id="dept-optgroup">
+                                <option value="" disabled>Cargando departamentos…</option>
+                            </optgroup>
+                        </select>
                     </div>
                     <button type="submit" class="submit-btn">Crear Cuenta</button>
                 </form>

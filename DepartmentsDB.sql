@@ -75,8 +75,8 @@ CREATE TABLE invoice (
     FOREIGN KEY (Code_order) REFERENCES purchase_order(Code_order) ON DELETE RESTRICT
 );
 
-DROP TABLE IF EXISTS Dept_Supplier;
-CREATE TABLE Dept_Supplier(
+DROP TABLE IF EXISTS dept_Supplier;
+CREATE TABLE dept_Supplier(
 	Code_dept INT UNSIGNED,
     Id_supplier INT UNSIGNED,
     PRIMARY KEY (Code_dept, Id_supplier),
@@ -123,11 +123,35 @@ VALUES
 ('Proveedor A', 'A12345678', 'Calle Mayor 1', '600111222', 'a@supplier.com'),
 ('Proveedor B', 'B87654321', 'Calle Sol 2', '600333444', 'b@supplier.com');
 
-INSERT INTO Dept_Supplier (Code_dept, Id_supplier)
-VALUES
-(1, 1),
-(2, 1),
-(1, 2);
+-- ni papa de por que narices no se inserta
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (3, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (3, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (4, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (4, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (5, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (5, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (6, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (6, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (7, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (7, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (8, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (8, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (9, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (9, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (10, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (10, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (11, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (11, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (12, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (12, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (13, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (13, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (14, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (14, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (15, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (15, 2);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (16, 1);
+INSERT INTO dept_Supplier (Code_dept, Id_supplier) VALUES (16, 2);
 
 -- Inserts de presupuestos 
 -- Type 1: Presupuesto normal Type 2: Plan de inversión
@@ -168,7 +192,21 @@ VALUES
 -- Formacion
 (2500.00, 2026, 1, 15),
 -- Administracion
-(2000.00, 2026, 1, 16);
+(2000.00, 2026, 1, 16),
+-- Premio Don Bosco tipo 1
+(1500.00, 2026, 1, 14);
+
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (8000.00, 2026, 2, 3);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (5000.00, 2026, 2, 5);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (10000.00, 2026, 2, 6);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (3000.00, 2026, 2, 8);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (2500.00, 2026, 2, 9);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (6000.00, 2026, 2, 10);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (5000.00, 2026, 2, 11);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (2000.00, 2026, 2, 12);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (12000.00, 2026, 2, 13);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (4000.00, 2026, 2, 15);
+INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (3500.00, 2026, 2, 16);
 
 DROP ROLE IF EXISTS 'role_admin'; -- roles and users have been created just to simulate how it colud be done
 DROP ROLE IF EXISTS 'role_contable';
@@ -251,14 +289,8 @@ SET DEFAULT ROLE 'role_jefe' TO
 
 FLUSH PRIVILEGES; -- para refrescar memoria cacheada
 
--- ============================================================
---  Procedimientos almacenados: datos filtrados por departamento
---  Todos reciben el Id_user del jefe logueado y devuelven
---  únicamente los registros que pertenecen a su departamento.
--- ============================================================
-
+-- Procedimientos que podemos necesitar
 DELIMITER $$
-
 -- Presupuestos del departamento del jefe
 DROP PROCEDURE IF EXISTS GetBudgetsByUser$$
 CREATE PROCEDURE GetBudgetsByUser(IN p_id_user INT UNSIGNED)

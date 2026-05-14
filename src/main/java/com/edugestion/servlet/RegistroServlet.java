@@ -21,9 +21,34 @@ public class RegistroServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
-        String nombre = request.getParameter("nombre");
-        String gmail = request.getParameter("gmail");
+        String nombre    = request.getParameter("nombre");
+        String gmail     = request.getParameter("gmail");
         String contrasena = request.getParameter("contrasena");
+        String rolParam  = request.getParameter("rol");
+
+        if (rolParam == null || rolParam.isBlank()) {
+            response.sendRedirect("viewRegistro.html?error=rol_requerido");
+            return;
+        }
+
+        // Determinar rol y departamento según la selección
+        int codeRole;
+        Integer codeDept;
+        if ("admin".equals(rolParam)) {
+            codeRole = 1;
+            codeDept = null;
+        } else if ("accountant".equals(rolParam)) {
+            codeRole = 2;
+            codeDept = null;
+        } else {
+            try {
+                codeDept = Integer.parseInt(rolParam);
+            } catch (NumberFormatException e) {
+                response.sendRedirect("viewRegistro.html?error=rol_invalido");
+                return;
+            }
+            codeRole = 3;
+        }
 
         try (Connection con = ConexionBD.getConnection()) {
             String checkSql = "SELECT Id_user FROM `user` WHERE Email = ?";
@@ -36,12 +61,13 @@ public class RegistroServlet extends HttpServlet {
                 return;
             }
 
-            // Code_role = 3 → dept_manager
-            String sql = "INSERT INTO `user` (Name, Email, `Password`,Code_dept, Code_role) VALUES (?, ?, ?, 3, 3)";
+            String sql = "INSERT INTO `user` (Name, Email, `Password`, Code_dept, Code_role) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, nombre);
             ps.setString(2, gmail);
             ps.setString(3, contrasena);
+            ps.setObject(4, codeDept);
+            ps.setInt(5, codeRole);
             ps.executeUpdate();
 
             response.sendRedirect("viewRegistro.html?registro=ok");

@@ -35,7 +35,7 @@ function buildBudgetDoughnut(canvasId, total, restante) {
     new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Total asignado', 'Restante'],
+            labels: ['Gastado', 'Restante'],
             datasets: [{
                 data: [gastado, restante],
                 backgroundColor: [

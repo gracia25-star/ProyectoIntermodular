@@ -34,7 +34,50 @@ function mostrarMensaje(texto, esError) {
     msg.style.display = 'block';
 }
 
+const DEPARTAMENTOS_FALLBACK = [
+    { codeDept: 1,  name: 'Informática' },
+    { codeDept: 2,  name: 'Mecánica' },
+    { codeDept: 3,  name: 'Electricidad' },
+    { codeDept: 4,  name: 'Automoción' },
+    { codeDept: 5,  name: 'Grado Básico' },
+    { codeDept: 6,  name: 'Telecomunicaciones' },
+    { codeDept: 7,  name: 'Robótica' },
+    { codeDept: 8,  name: 'Primaria' },
+    { codeDept: 9,  name: 'Infantil' },
+    { codeDept: 10, name: 'Secundaria' },
+    { codeDept: 11, name: 'Bachillerato' },
+    { codeDept: 12, name: 'SAT' },
+    { codeDept: 13, name: 'Mantenimiento' },
+    { codeDept: 14, name: 'Premio Don Bosco' },
+    { codeDept: 15, name: 'Formación' },
+    { codeDept: 16, name: 'Administración' }
+];
+
+function rellenarDepartamentos(depts) {
+    const group = document.getElementById('dept-optgroup');
+    group.innerHTML = '';
+    depts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.codeDept;
+        opt.textContent = d.name;
+        group.appendChild(opt);
+    });
+}
+
+async function cargarDepartamentos() {
+    try {
+        const res = await fetch('DepartmentServlet');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const depts = await res.json();
+        rellenarDepartamentos(depts);
+    } catch (err) {
+        console.warn('DepartmentServlet no disponible, usando lista local:', err);
+        rellenarDepartamentos(DEPARTAMENTOS_FALLBACK);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
+    cargarDepartamentos();
     const params = new URLSearchParams(window.location.search);
     const error = params.get('error');
     const registro = params.get('registro');
@@ -47,6 +90,12 @@ document.addEventListener('DOMContentLoaded', function () {
         switchTab('login');
     } else if (error === 'email_existe') {
         mostrarMensaje('Ese correo ya está registrado.', true);
+        switchTab('register');
+    } else if (error === 'rol_requerido') {
+        mostrarMensaje('Debes seleccionar un rol o departamento.', true);
+        switchTab('register');
+    } else if (error === 'rol_invalido') {
+        mostrarMensaje('El rol o departamento seleccionado no es válido.', true);
         switchTab('register');
     } else if (error === 'servidor') {
         mostrarMensaje('Error del servidor. Revisa la conexión con la base de datos.', true);
