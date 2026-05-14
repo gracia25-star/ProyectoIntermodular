@@ -62,11 +62,16 @@
 
             <div class="orden-form">
 
-                <!-- Fila 1: Fecha · Proveedor · Importe -->
+                <!-- Fila 1: Código Plan Inversión · Proveedor · Importe -->
                 <div class="form-row">
                     <div class="input-group">
-                        <label for="orden-fecha">Fecha</label>
-                        <input type="date" id="orden-fecha" name="fecha">
+                        <label for="orden-codigo">
+                            Cód. Plan Inversión
+                            <span class="campo-opcional">(opcional)</span>
+                        </label>
+                        <input type="text" id="orden-codigo" name="codigo"
+                               maxlength="7" placeholder="7 dígitos"
+                               inputmode="numeric" class="input-codigo-form">
                     </div>
                     <div class="input-group flex-2">
                         <label for="orden-proveedor">Proveedor</label>
@@ -109,7 +114,7 @@
 
                 <!-- Botón -->
                 <div class="form-row form-row-btn">
-                    <button class="submit-btn btn-auto" onclick="crearOrden()">
+                    <button class="submit-btn btn-auto" onclick="abrirTipoPopup()">
                         + Crear Orden de Compra
                     </button>
                 </div>
@@ -183,11 +188,47 @@
 
     </div>
 
+    <!-- ── Popup: tipo de artículo (solo Presupuesto General) ── -->
+    <div id="tipo-overlay" class="notas-overlay" onclick="cerrarTipoPopup(event)">
+        <div class="notas-popup tipo-popup">
+            <button class="notas-close" onclick="cerrarTipoPopupBtn()">✕</button>
+            <h3 class="notas-titulo">Tipo de artículo</h3>
+            <p class="tipo-hint" style="margin-bottom:1rem;">
+                Esta orden se cargará al <strong>Presupuesto General</strong>.
+                Indica si el artículo es inventariable o fungible para generar el número de orden.
+            </p>
+
+            <div class="notas-seccion">
+                <label class="notas-label">Selecciona el tipo <span class="campo-obligatorio">*</span></label>
+                <div class="tipo-selector">
+                    <label class="tipo-option">
+                        <input type="radio" name="orden-tipo" value="0">
+                        <span>Inventariable</span>
+                    </label>
+                    <label class="tipo-option">
+                        <input type="radio" name="orden-tipo" value="1">
+                        <span>Fungible</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-row form-row-btn" style="margin-top:1.2rem;">
+                <button class="submit-btn btn-auto" onclick="confirmarTipoYCrear()">
+                    Confirmar y crear orden
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ── Popup de Notas ── -->
     <div id="notas-overlay" class="notas-overlay" onclick="cerrarNotas(event)">
         <div class="notas-popup">
             <button class="notas-close" onclick="cerrarNotasBtn()">✕</button>
             <h3 class="notas-titulo">Notas de la orden</h3>
+            <div class="notas-seccion" id="notas-tipo-seccion" style="display:none;">
+                <label class="notas-label">Tipo · Presupuesto</label>
+                <p id="notas-tipo" class="notas-texto"></p>
+            </div>
             <div class="notas-seccion">
                 <label class="notas-label">Descripción del jefe de departamento</label>
                 <p id="notas-desc" class="notas-texto"></p>

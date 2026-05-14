@@ -8,6 +8,7 @@
     <link rel="icon" href="img/logo-salesianos2.png" type="image/png">
     <link rel="stylesheet" href="css/Registro.css">
     <link rel="stylesheet" href="css/Menu.css">
+    <link rel="stylesheet" href="css/Presupuesto.css">
     <style>body{visibility:hidden}</style>
     <script>
         fetch('SesionServlet').then(r=>r.json()).then(d=>{
@@ -195,19 +196,7 @@
 
     </div>
 
-    <script>
-        const rol = sessionStorage.getItem("rol");
-        document.getElementById("rolUsuario").innerText = rol || "Usuario";
-
-        // Mostrar año actual automáticamente
-        const anio = new Date().getFullYear();
-        document.getElementById("anioActual").innerText = anio;
-
-        // Restricciones por rol
-        if (rol === "contable") {
-            document.querySelectorAll("button").forEach(btn => btn.disabled = true);
-        }
-    </script>
+    <script src="js/Presupuesto.js"></script>
 
 </body>
 </html>

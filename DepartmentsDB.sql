@@ -52,10 +52,15 @@ CREATE TABLE supplier (
 DROP TABLE IF EXISTS purchase_order;
 CREATE TABLE purchase_order (
 	Code_order INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	Order_reference VARCHAR(50) NOT NULL UNIQUE,
+	Description TEXT NULL,
 	Date TIMESTAMP NOT NULL DEFAULT NOW(),
 	Amount DECIMAL (10,2) NOT NULL,
 	Id_budget INT UNSIGNED,
 	Id_supplier INT UNSIGNED,
+	Status VARCHAR(20) NOT NULL DEFAULT 'pending',
+	Comment TEXT NULL,
+	CHECK (Status IN ('pending', 'approved')),
 	FOREIGN KEY (Id_budget) REFERENCES budget(Id_budget) ON DELETE RESTRICT,
 	FOREIGN KEY (Id_supplier) REFERENCES supplier(Id_supplier) ON DELETE RESTRICT
 );

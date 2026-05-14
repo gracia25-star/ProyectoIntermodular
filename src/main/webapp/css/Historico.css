@@ -1,0 +1,126 @@
+/* ===== HISTÓRICO - ESTILOS ESPECÍFICOS ===== */
+/* Complementa Registro.css y Menu.css          */
+
+/* ── Nav activo ── */
+.top-nav-btn.active-nav {
+    color: #c70303;
+    background: rgba(199, 3, 3, 0.08);
+}
+
+.top-nav-btn.active-nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 3px;
+    background: #c70303;
+    border-radius: 2px;
+}
+
+/* ── Selector de año ── */
+.year-select {
+    padding: 10px 40px 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    background: #f9f9fa;
+    color: #333;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: border-color 0.2s ease;
+}
+
+.year-select:focus {
+    outline: none;
+    border-color: #c70303;
+}
+
+/* ── Tablas dentro de chart-card ── */
+.chart-card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.chart-card table thead th {
+    padding: 12px 10px;
+    border-bottom: 2px solid #ddd;
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 700;
+    text-align: left;
+}
+
+.chart-card table tbody td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    transition: background-color 0.2s ease;
+}
+
+.chart-card table tbody tr:hover td {
+    background-color: #f1f5f9;
+}
+
+/* ── Cards de resumen del año ── */
+.resumen-valor {
+    background: #f4f6f9;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
+
+/* ── Estado de presupuesto cerrado/abierto ── */
+.estado-cerrado {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.estado-abierto {
+    color: #d97706;
+    font-weight: 600;
+}
+
+/* ── Órdenes históricas: estado ── */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge.aprobada {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-badge.pendiente {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+/* ── Mensaje tabla vacía ── */
+.tabla-vacia {
+    text-align: center;
+    color: #aaa;
+    font-style: italic;
+    padding: 24px;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 768px) {
+    .chart-card table thead th,
+    .chart-card table tbody td {
+        padding: 8px 6px;
+        font-size: 13px;
+    }
+}

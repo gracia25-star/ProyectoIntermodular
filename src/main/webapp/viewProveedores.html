@@ -8,6 +8,7 @@
     <link rel="icon" href="img/logo-salesianos2.png" type="image/png">
     <link rel="stylesheet" href="css/Registro.css">
     <link rel="stylesheet" href="css/Menu.css">
+    <link rel="stylesheet" href="css/Proveedores.css">
 </head>
 
 <body>
@@ -146,16 +147,7 @@
 
     </div>
 
-    <script>
-        const rol = sessionStorage.getItem("rol");
-        document.getElementById("rolUsuario").innerText = rol || "Usuario";
-
-        function confirmarEliminar() {
-            if (confirm("¿Seguro que quieres eliminar este proveedor?")) {
-                alert("Proveedor eliminado (simulado)");
-            }
-        }
-    </script>
+    <script src="js/Proveedores.js"></script>
 
 </body>
 

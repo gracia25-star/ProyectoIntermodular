@@ -1,0 +1,110 @@
+/* ===== PRESUPUESTOS - ESTILOS ESPECÍFICOS ===== */
+/* Complementa Registro.css y Menu.css            */
+
+/* ── Nav activo ── */
+.top-nav-btn.active-nav {
+    color: #c70303;
+    background: rgba(199, 3, 3, 0.08);
+}
+
+.top-nav-btn.active-nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 3px;
+    background: #c70303;
+    border-radius: 2px;
+}
+
+/* ── Tablas dentro de chart-card ── */
+.chart-card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.chart-card table thead th {
+    padding: 12px 10px;
+    border-bottom: 2px solid #ddd;
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 700;
+    text-align: left;
+}
+
+.chart-card table tbody td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    transition: background-color 0.2s ease;
+}
+
+.chart-card table tbody tr:hover td {
+    background-color: #f1f5f9;
+}
+
+/* ── Cards de resumen (Asignado / Gastado / Restante) ── */
+.resumen-valor {
+    background: #f4f6f9;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
+
+/* ── Badges de tipo de presupuesto ── */
+.tipo-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.tipo-general {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.tipo-inversion {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+/* ── Input código 7 dígitos ── */
+.input-codigo {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 3px;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* ── Barra de progreso del presupuesto ── */
+.budget-bar-wrap {
+    width: 100%;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+.budget-bar-fill {
+    height: 100%;
+    background: #c70303;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 768px) {
+    .chart-card table thead th,
+    .chart-card table tbody td {
+        padding: 8px 6px;
+        font-size: 13px;
+    }
+}
