@@ -1,194 +1,219 @@
 /* ===== JS ÓRDENES ADMIN ===== */
 
-// ── Leer parámetro ?depto=XXX de la URL y aplicar filtro ─────
+let _btnActivo  = null;
+let _deptActual = 0;
+// Mapa codeOrder → datos completos de la orden (evita poner texto en atributos HTML)
+const ordenesMapa = {};
+
+// ── Al cargar: poblar departamentos y cargar órdenes ──────────
 document.addEventListener('DOMContentLoaded', () => {
+    poblarDepartamentos();
+
+    // Si viene ?depto=N desde el menú admin, preseleccionar por nombre
     const params = new URLSearchParams(window.location.search);
-    const depto  = params.get('depto');
-    if (depto) {
-        const select = document.getElementById('filtro-depto');
-        if (select) {
-            select.value = depto;
-            filtrarDepto(); // aplica el filtro automáticamente
-        }
-    }
+    const deptParam = params.get('depto');
+    if (deptParam) window._deptPreselect = deptParam;
 });
 
-// ── Referencia al botón y fila activos ────────────────────────
-let _btnActivo  = null;
-let _filaActiva = null;
+// ── Poblar select de departamentos desde el servidor ─────────
+function poblarDepartamentos() {
+    fetch('DepartmentServlet')
+        .then(r => r.json())
+        .then(depts => {
+            const select = document.getElementById('filtro-depto');
+            select.innerHTML = '<option value="0">Todos los departamentos</option>';
+            depts.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.codeDept;
+                opt.textContent = d.name;
+                select.appendChild(opt);
+            });
 
-// ── Filtro por departamento ───────────────────────────────────
+            if (window._deptPreselect) {
+                for (const opt of select.options) {
+                    if (opt.textContent.toLowerCase().includes(window._deptPreselect.toLowerCase())) {
+                        select.value = opt.value;
+                        break;
+                    }
+                }
+                delete window._deptPreselect;
+            }
+
+            cargarOrdenes(parseInt(select.value) || 0);
+        })
+        .catch(() => cargarOrdenes(0));
+}
+
+// ── Filtrar por departamento ──────────────────────────────────
 function filtrarDepto() {
-    const val    = document.getElementById('filtro-depto').value;
-    const filas  = document.querySelectorAll('#ordenes-admin-tbody tr');
-    const titulo = document.getElementById('tabla-titulo');
-    const total  = document.getElementById('filtro-total');
-    let visibles = 0;
+    const select = document.getElementById('filtro-depto');
+    _deptActual = parseInt(select.value) || 0;
+    document.getElementById('tabla-titulo').textContent = _deptActual === 0
+        ? 'Todas las Órdenes'
+        : 'Órdenes — ' + select.options[select.selectedIndex].text;
+    cargarOrdenes(_deptActual);
+}
 
-    filas.forEach(tr => {
-        const depto = tr.getAttribute('data-depto');
-        if (val === 'todos' || depto === val) {
-            tr.classList.remove('oculta');
-            visibles++;
-        } else {
-            tr.classList.add('oculta');
+// ── Cargar órdenes desde el servidor ─────────────────────────
+async function cargarOrdenes(deptCode) {
+    const tbody = document.getElementById('ordenes-admin-tbody');
+    tbody.innerHTML = '<tr><td colspan="7" class="tabla-vacia-admin">Cargando...</td></tr>';
+
+    try {
+        const url = deptCode > 0 ? `AdminOrderServlet?dept=${deptCode}` : 'AdminOrderServlet';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const ordenes = await res.json();
+        if (ordenes.error) throw new Error(ordenes.error);
+
+        // Guardar en mapa para acceso seguro desde el modal
+        ordenes.forEach(o => { ordenesMapa[o.codeOrder] = o; });
+
+        if (!ordenes.length) {
+            tbody.innerHTML = '<tr><td colspan="7" class="tabla-vacia-admin">No hay órdenes para este departamento</td></tr>';
+            document.getElementById('filtro-total').textContent = '0 órdenes';
+            return;
         }
-    });
 
-    if (val === 'todos') {
-        titulo.textContent = 'Todas las Órdenes';
-        total.textContent  = `Mostrando todas las órdenes (${visibles})`;
-    } else {
-        const texto = document.getElementById('filtro-depto').options[
-            document.getElementById('filtro-depto').selectedIndex
-        ].text;
-        titulo.textContent = `Órdenes — ${texto}`;
-        total.textContent  = `${visibles} orden${visibles !== 1 ? 'es' : ''}`;
+        tbody.innerHTML = ordenes.map(o => buildFila(o)).join('');
+        document.getElementById('filtro-total').textContent =
+            `${ordenes.length} orden${ordenes.length !== 1 ? 'es' : ''}`;
+
+    } catch (err) {
+        console.error('Error cargando órdenes:', err);
+        tbody.innerHTML = `<tr><td colspan="7" class="tabla-vacia-admin">Error: ${err.message}</td></tr>`;
     }
 }
 
-// ── Cambiar color del select según estado ─────────────────────
-function cambiarEstado(select) {
-    select.classList.remove('estado-green', 'estado-orange', 'estado-red');
-    const map = { aprobada: 'estado-green', pendiente: 'estado-orange', rechazada: 'estado-red' };
-    select.classList.add(map[select.value] || 'estado-orange');
-    // En producción: PATCH /api/ordenes/{ref}/estado
+// ── Clase CSS según estado ────────────────────────────────────
+function claseEstado(status) {
+    if (status === 'approved') return 'estado-green';
+    if (status === 'rejected') return 'estado-red';
+    return 'estado-orange';
 }
 
-// ── Abrir modal ───────────────────────────────────────────────
+// ── Construir fila HTML — datos complejos NO van en atributos ─
+function buildFila(o) {
+    const tieneNota = o.comment && o.comment.trim().length > 0;
+
+    return `
+        <tr>
+            <td class="ref-cell">${esc(o.orderReference)}</td>
+            <td><span class="depto-badge">${esc(o.deptName)}</span></td>
+            <td>${esc(o.date)}</td>
+            <td>${esc(o.supplierName)}</td>
+            <td class="importe-cell">${formatEuros(o.amount)}</td>
+            <td>
+                <select class="estado-select ${claseEstado(o.status)}"
+                        data-code-order="${o.codeOrder}"
+                        onchange="cambiarEstado(this)">
+                    <option value="pending"  ${o.status === 'pending'  ? 'selected' : ''}>Pendiente</option>
+                    <option value="approved" ${o.status === 'approved' ? 'selected' : ''}>Aprobada</option>
+                    <option value="rejected" ${o.status === 'rejected' ? 'selected' : ''}>Rechazada</option>
+                </select>
+            </td>
+            <td>
+                <button class="notas-btn ${tieneNota ? 'has-nota' : ''}"
+                        onclick="abrirNotasAdmin(this)"
+                        data-code-order="${o.codeOrder}">💬</button>
+            </td>
+        </tr>`;
+}
+
+// ── Cambiar estado → guardar en BD inmediatamente ─────────────
+async function cambiarEstado(select) {
+    const codeOrder = select.getAttribute('data-code-order');
+    const newStatus = select.value;
+
+    select.className = 'estado-select ' + claseEstado(newStatus);
+
+    try {
+        const res  = await fetch('AdminOrderServlet', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `action=status&codeOrder=${encodeURIComponent(codeOrder)}&value=${encodeURIComponent(newStatus)}`
+        });
+        const data = await res.json();
+        if (!data.ok) console.error('Error actualizando estado:', data.error);
+    } catch (err) {
+        console.error('Error:', err);
+    }
+}
+
+// ── Abrir modal — lee datos del mapa, no de atributos HTML ────
 function abrirNotasAdmin(btn) {
-    _btnActivo  = btn;
-    _filaActiva = btn.closest('tr');
+    _btnActivo = btn;
+    const codeOrder = btn.getAttribute('data-code-order');
+    const o = ordenesMapa[codeOrder] || {};
 
-    const desc = btn.getAttribute('data-desc') || '(Sin descripción)';
-    const obs  = btn.getAttribute('data-obs')  || '';
-    const ref  = _filaActiva?.querySelector('.ref-cell')?.textContent || '';
-
-    document.getElementById('modal-ref').textContent  = ref;
-    document.getElementById('modal-desc').textContent = desc;
-    document.getElementById('modal-obs').value        = obs;
-
-    // Renderizar zona PDF según si la fila ya tiene enlace o no
-    renderizarZonaPdf();
-
+    document.getElementById('modal-ref').textContent  = o.orderReference || '';
+    document.getElementById('modal-desc').textContent = o.description    || '(Sin descripción)';
+    document.getElementById('modal-obs').value        = o.comment        || '';
     document.getElementById('modal-overlay').classList.add('visible');
     document.getElementById('modal-obs').focus();
 }
 
-// ── Renderizar la zona PDF del modal ──────────────────────────
-function renderizarZonaPdf() {
-    const zona = document.getElementById('modal-pdf-zona');
-    if (!_filaActiva) return;
-
-    const pdfLink = _filaActiva.querySelector('.pdf-link');
-
-    if (pdfLink) {
-        // Hay PDF: mostrar enlace + botón eliminar
-        zona.innerHTML = `
-            <div class="pdf-admin-row">
-                <a href="${pdfLink.href}" target="_blank" class="pdf-link">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                    </svg>
-                    ${pdfLink.title || 'Ver factura'}
-                </a>
-                <button class="pdf-quitar-btn" onclick="quitarPdf()" title="Eliminar PDF">✕ Quitar</button>
-            </div>`;
-    } else {
-        // No hay PDF: mostrar botón de subir
-        zona.innerHTML = `
-            <label class="file-label pdf-subir-label" for="modal-pdf-input">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" class="file-icon">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
-                Subir factura PDF…
-            </label>`;
-        // Limpiar el input por si había archivo anterior
-        document.getElementById('modal-pdf-input').value = '';
-    }
-}
-
-// ── Subir PDF desde el modal ──────────────────────────────────
-function subirPdfAdmin(input) {
-    if (!input.files || !input.files[0] || !_filaActiva) return;
-    const archivo = input.files[0];
-    const url     = URL.createObjectURL(archivo);
-
-    // Actualizar la celda de Factura en la fila de la tabla
-    const celdaFactura = _filaActiva.querySelector('td:nth-child(7)');
-    if (celdaFactura) {
-        celdaFactura.innerHTML = `
-            <a href="${url}" target="_blank" class="pdf-link" title="${archivo.name}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>PDF
-            </a>`;
-    }
-
-    // Refrescar la zona del modal
-    renderizarZonaPdf();
-
-    // En producción: subir el archivo al back con FormData
-    // const fd = new FormData(); fd.append('factura', archivo);
-    // await fetch('/api/ordenes/{ref}/factura', { method: 'POST', body: fd });
-}
-
-// ── Quitar PDF ────────────────────────────────────────────────
-function quitarPdf() {
-    if (!_filaActiva) return;
-
-    if (!confirm('¿Seguro que quieres eliminar la factura de esta orden?')) return;
-
-    // Limpiar la celda de Factura en la tabla
-    const celdaFactura = _filaActiva.querySelector('td:nth-child(7)');
-    if (celdaFactura) {
-        celdaFactura.innerHTML = `<span class="no-pdf">—</span>`;
-    }
-
-    // Refrescar zona modal
-    renderizarZonaPdf();
-
-    // En producción: DELETE /api/ordenes/{ref}/factura
-}
-
-// ── Guardar observaciones ─────────────────────────────────────
-function guardarObservaciones() {
+// ── Guardar observaciones → BD ────────────────────────────────
+async function guardarObservaciones() {
     if (!_btnActivo) return;
+    const codeOrder = _btnActivo.getAttribute('data-code-order');
+    const comment   = document.getElementById('modal-obs').value.trim();
 
-    const nuevaObs = document.getElementById('modal-obs').value.trim();
-    _btnActivo.setAttribute('data-obs', nuevaObs);
+    try {
+        const res  = await fetch('AdminOrderServlet', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `action=comment&codeOrder=${encodeURIComponent(codeOrder)}&value=${encodeURIComponent(comment)}`
+        });
+        const data = await res.json();
 
-    const btn = document.querySelector('.modal-footer .submit-btn');
-    const textoOriginal = btn.textContent;
-    btn.textContent = '✓ Guardado';
-    btn.style.background = '#16a34a';
-    setTimeout(() => {
-        btn.textContent = textoOriginal;
-        btn.style.background = '';
-        _cerrarModal();
-    }, 900);
+        if (data.ok) {
+            // Actualizar mapa en memoria
+            if (ordenesMapa[codeOrder]) ordenesMapa[codeOrder].comment = comment;
+            // Actualizar apariencia del botón
+            _btnActivo.classList.toggle('has-nota', comment.length > 0);
 
-    // En producción: PATCH /api/ordenes/{ref}/observaciones
+            const btn = document.querySelector('.modal-footer .submit-btn');
+            const orig = btn.textContent;
+            btn.textContent = '✓ Guardado';
+            btn.style.background = '#16a34a';
+            setTimeout(() => {
+                btn.textContent = orig;
+                btn.style.background = '';
+                _cerrarModal();
+            }, 900);
+        } else {
+            alert('Error al guardar: ' + (data.error || 'Error desconocido'));
+        }
+    } catch (err) {
+        console.error('Error guardando observaciones:', err);
+        alert('Error de conexión al guardar.');
+    }
 }
 
 // ── Cerrar modal ──────────────────────────────────────────────
 function cerrarModalAdmin(event) {
     if (event.target === document.getElementById('modal-overlay')) _cerrarModal();
 }
-
 function cerrarModalBtn() { _cerrarModal(); }
-
 function _cerrarModal() {
     document.getElementById('modal-overlay').classList.remove('visible');
-    _btnActivo  = null;
-    _filaActiva = null;
+    _btnActivo = null;
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') _cerrarModal(); });
+
+// ── Utilidades ────────────────────────────────────────────────
+function formatEuros(valor) {
+    const num = parseFloat(valor) || 0;
+    return new Intl.NumberFormat('es-ES', {
+        style: 'currency', currency: 'EUR',
+        minimumFractionDigits: 2, maximumFractionDigits: 2
+    }).format(num);
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') _cerrarModal(); });
+function esc(s) {
+    if (!s) return '';
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+}

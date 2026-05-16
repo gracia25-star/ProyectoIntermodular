@@ -43,104 +43,95 @@
         <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
         <a href="viewOrdenes.html" class="top-nav-btn">Órdenes</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
+        <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
     </nav>
 
     <div class="menu-container">
 
-        <!-- FILTRO HISTÓRICO (AQUÍ SÍ) -->
-        <div class="chart-card" style="margin-bottom:2rem;">
-            <h2 class="chart-title">Seleccionar Año</h2>
-            <div style="padding:1rem;">
-                <select>
-                    <option>2025</option>
-                    <option>2024</option>
-                    <option>2023</option>
-                </select>
-            </div>
-        </div>
+        <!-- FILTROS -->
+        <div class="chart-card">
+            <h2 class="chart-title">Filtros</h2>
+            <div class="filtros-row">
 
-        <!-- RESUMEN HISTÓRICO -->
-        <div class="chart-card" style="margin-bottom:2rem;">
-            <h2 class="chart-title">Resumen del Año</h2>
-            <div style="display:flex; gap:2rem; justify-content:space-between; padding:1.5rem; flex-wrap:wrap;">
-
-                <div style="flex:1; min-width:200px; text-align:center;">
-                    <p><strong>Total Asignado</strong></p>
-                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">30,000 €</div>
+                <!-- Selector Año (todos) -->
+                <div class="filtro-item">
+                    <label class="filtro-label">Año</label>
+                    <select id="select-anio" class="filtro-select">
+                        <option>Cargando...</option>
+                    </select>
                 </div>
 
-                <div style="flex:1; min-width:200px; text-align:center;">
-                    <p><strong>Total Gastado</strong></p>
-                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">25,000 €</div>
-                </div>
-
-                <div style="flex:1; min-width:200px; text-align:center;">
-                    <p><strong>Total Restante</strong></p>
-                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">5,000 €</div>
+                <!-- Selector Departamento (solo admin/contable) -->
+                <div id="dept-filter-container" class="filtro-item" style="display: none;">
+                    <label class="filtro-label">Departamento</label>
+                    <select id="select-dept" class="filtro-select">
+                        <option value="">Seleccionar departamento...</option>
+                    </select>
                 </div>
 
             </div>
         </div>
 
-        <!-- TABLA HISTÓRICO PRESUPUESTOS -->
-        <div class="chart-card" style="margin-bottom:2rem;">
+        <!-- BANNER INFO -->
+        <div id="info-vista" class="info-vista-banner" style="display: none;"></div>
+
+        <!-- PRESUPUESTOS -->
+        <div class="chart-card">
             <h2 class="chart-title">Presupuestos del Año</h2>
-
-            <div style="padding:1.5rem; overflow-x:auto;">
-                <table style="width:100%; border-collapse:collapse;">
+            <div style="padding: 1.5rem; overflow-x: auto;">
+                <table class="tabla-historico">
                     <thead>
                         <tr>
                             <th>Departamento</th>
                             <th>Asignado</th>
                             <th>Gastado</th>
                             <th>Restante</th>
-                            <th>Estado</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Informática</td>
-                            <td>15000€</td>
-                            <td>12000€</td>
-                            <td>3000€</td>
-                            <td style="color:green;">Cerrado</td>
-                        </tr>
-                        <tr>
-                            <td>Mantenimiento</td>
-                            <td>15000€</td>
-                            <td>13000€</td>
-                            <td>2000€</td>
-                            <td style="color:green;">Cerrado</td>
-                        </tr>
+                    <tbody id="tabla-presupuestos">
+                        <tr><td colspan="4" class="tabla-vacia">Cargando...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- PLANES DE INVERSIÓN HISTÓRICOS -->
+        <!-- PLANES DE INVERSIÓN -->
         <div class="chart-card">
-            <h2 class="chart-title">Planes de Inversión</h2>
-
-            <div style="padding:1.5rem; overflow-x:auto;">
-                <table style="width:100%; border-collapse:collapse;">
+            <h2 class="chart-title">Planes de Inversión del Año</h2>
+            <div style="padding: 1.5rem; overflow-x: auto;">
+                <table class="tabla-historico">
                     <thead>
                         <tr>
-                            <th>Nº Plan</th>
                             <th>Departamento</th>
-                            <th>Descripción</th>
+                            <th>Asignado</th>
+                            <th>Gastado</th>
+                            <th>Restante</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tabla-planes">
+                        <tr><td colspan="4" class="tabla-vacia">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ÓRDENES DE COMPRA -->
+        <div class="chart-card">
+            <h2 class="chart-title">Órdenes de Compra del Año</h2>
+            <div style="padding: 1.5rem; overflow-x: auto;">
+                <table class="tabla-historico">
+                    <thead>
                         <tr>
-                            <td>0001234</td>
-                            <td>Informática</td>
-                            <td>Compra de ordenadores</td>
+                            <th>Nº Orden</th>
+                            <th>Referencia</th>
+                            <th>Descripción</th>
+                            <th>Fecha</th>
+                            <th>Importe</th>
+                            <th>Estado</th>
                         </tr>
-                        <tr>
-                            <td>0005678</td>
-                            <td>Mantenimiento</td>
-                            <td>Reparación de instalaciones</td>
-                        </tr>
+                    </thead>
+                    <tbody id="tabla-ordenes">
+                        <tr><td colspan="6" class="tabla-vacia">Cargando...</td></tr>
                     </tbody>
                 </table>
             </div>

@@ -221,6 +221,15 @@
     margin-top: 8px;
 }
 
+/* ── Celda vacía / cargando ── */
+.tabla-vacia-admin {
+    text-align: center;
+    color: #aaa;
+    font-style: italic;
+    padding: 32px 24px;
+    font-size: 14px;
+}
+
 /* ── Fila oculta por filtro ── */
 tr.oculta {
     display: none;

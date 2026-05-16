@@ -92,6 +92,33 @@ public class BudgetDAO {
         return b.getTotalAmount().subtract(getSpentAmount(idBudget));
     }
 
+    // ── Insertar presupuesto ─────────────────────────────────
+    public int insert(Budget b) throws SQLException {
+        String sql = "INSERT INTO budget (Total_amount, Year, Type, Code_dept) VALUES (?, ?, ?, ?)";
+        try (Connection con = ConexionBD.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setBigDecimal(1, b.getTotalAmount());
+            ps.setInt(2, b.getYear());
+            ps.setInt(3, b.getType());
+            if (b.getCodeDept() != null) ps.setInt(4, b.getCodeDept());
+            else ps.setNull(4, Types.INTEGER);
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                return rs.next() ? rs.getInt(1) : -1;
+            }
+        }
+    }
+
+    // ── Eliminar presupuesto ─────────────────────────────────
+    public boolean delete(int idBudget) throws SQLException {
+        String sql = "DELETE FROM budget WHERE Id_budget = ?";
+        try (Connection con = ConexionBD.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idBudget);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
     // ── Internos ─────────────────────────────────────────────
     private List<Budget> query(String sql) throws SQLException {
         try (Connection con = ConexionBD.getConnection();

@@ -41,11 +41,26 @@
 
     <!-- NAV -->
     <nav class="top-nav">
-        <a href="viewMenu.html" class="top-nav-btn">Menu</a>
+       <a href="viewMenu.html" class="top-nav-btn" id="nav-menu-link">Menú</a>
         <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
-        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de Compra</a>
+        <a href="viewOrdenes.html" class="top-nav-btn" id="nav-ordenes-link">Órdenes</a>
+        <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
     </nav>
+    <script>
+        fetch('SesionServlet').then(r=>r.json()).then(d=>{
+            if(d.role !== 'admin') {
+                const presLink = document.querySelector('a[href="viewPresupuesto.html"]');
+                if(presLink) presLink.remove();
+            }
+            if(d.role === 'admin' || d.role === 'accountant') {
+                const menuLink = document.getElementById('nav-menu-link');
+                if(menuLink) menuLink.href = 'viewMenuAdmin.html';
+                const ordenesLink = document.getElementById('nav-ordenes-link');
+                if(ordenesLink) ordenesLink.href = 'viewOrdenesAdmin.html';
+            }
+        }).catch(()=>{});
+    </script>
 
     <div class="menu-container">
 

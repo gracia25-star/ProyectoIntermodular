@@ -12,7 +12,8 @@
     <style>body{visibility:hidden}</style>
     <script>
         fetch('SesionServlet').then(r=>r.json()).then(d=>{
-            if(d.role==='admin'||d.role==='accountant') window.location.replace('viewMenuAdmin.html');
+            if(d.role==='dept_manager') window.location.replace('viewMenu.html');
+            else if(d.role==='accountant') window.location.replace('viewMenuAdmin.html');
             else document.body.style.visibility='visible';
         }).catch(()=>{document.body.style.visibility='visible'});
     </script>
@@ -26,7 +27,6 @@
         <div>
             <h1 class="main-title">Presupuestos</h1>
         </div>
-
         <div class="user-menu">
             <div class="user-avatar">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -36,163 +36,118 @@
             </div>
             <div class="user-dropdown">
                 <div class="user-dropdown-header">
-                    <div class="user-name">Usuario</div>
-                    <div class="user-role" id="rolUsuario">Rol</div>
+                    <div class="user-name">Usuario Admin</div>
+                    <div class="user-role">Administrador</div>
                 </div>
                 <a href="viewRegistro.html" class="logout-btn">Cerrar Sesión</a>
             </div>
         </div>
     </div>
 
-    <!-- NAV -->
+    <!-- NAV (admin) -->
     <nav class="top-nav">
-        <a href="viewMenu.html" class="top-nav-btn">Menú</a>
-        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de compra</a>
+        <a href="viewMenuAdmin.html" class="top-nav-btn">Menú</a>
+        <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
+        <a href="viewOrdenesAdmin.html" class="top-nav-btn">Órdenes</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
     </nav>
 
     <div class="menu-container">
 
-        <!-- INFORMACIÓN AÑO ACTUAL -->
-        <div class="chart-card" style="margin-bottom: 2rem;">
-            <h2 class="chart-title">Año Actual</h2>
-            <div style="padding: 1rem;">
-                <strong id="anioActual"></strong>
-            </div>
-        </div>
+        <!-- ── ASIGNAR PRESUPUESTO ── -->
+        <section class="chart-card orden-form-card">
+            <h2 class="chart-title">Asignar Presupuesto — <span id="anio-pres"></span></h2>
 
-        <!-- PRESUPUESTO -->
-        <div class="chart-card" style="margin-bottom: 2rem;">
-            <h2 class="chart-title">Asignar Presupuesto</h2>
-
-            <div class="form-section" style="padding: 1.5rem;">
-                <form>
-                    <div class="row" style="display:flex; gap:1rem;">
-                        <div class="input-group" style="flex:1;">
-                            <label>Departamento</label>
-                            <input type="text" placeholder="Ej. Informática">
-                        </div>
-                        <div class="input-group" style="flex:1;">
-                            <label>Monto Asignado (€)</label>
-                            <input type="number">
-                        </div>
-                    </div>
-
-                    <div class="row" style="display:flex; gap:1rem;">
-                        <div class="input-group" style="flex:1;">
-                            <label>Monto Gastado (€)</label>
-                            <input type="number">
-                        </div>
-                        <div class="input-group" style="flex:1;">
-                            <label>Estado</label>
-                            <select>
-                                <option>Aprobado</option>
-                                <option>Pendiente</option>
+            <div class="orden-form">
+                <form id="form-presupuesto">
+                    <div class="form-row">
+                        <div class="input-group flex-2">
+                            <label for="pres-departamento">Departamento</label>
+                            <select id="pres-departamento" class="input-select" required>
+                                <option value="" disabled selected>Selecciona un departamento…</option>
                             </select>
                         </div>
+                        <div class="input-group flex-2">
+                            <label for="pres-monto">Cantidad (€)</label>
+                            <input type="number" id="pres-monto" min="0.01" step="0.01" placeholder="0,00" required>
+                        </div>
                     </div>
-
-                    <button class="submit-btn">Guardar</button>
+                    <div class="form-row form-row-btn">
+                        <button type="submit" class="submit-btn btn-auto">+ Guardar Presupuesto</button>
+                    </div>
                 </form>
             </div>
-        </div>
 
-        <!-- RESUMEN PRESUPUESTO (COMO EN PIZARRA) -->
-        <div class="chart-card" style="margin-bottom:2rem;">
-            <h2 class="chart-title">Resumen del Presupuesto</h2>
-            <div style="display:flex; gap:2rem; justify-content:space-between; padding:1.5rem; flex-wrap:wrap;">
-                <div style="flex:1; min-width:200px; text-align:center;">
-                    <p><strong>Asignado</strong></p>
-                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">15,000 €</div>
-                </div>
-                <div style="flex:1; min-width:200px; text-align:center;">
-                    <p><strong>Gastado</strong></p>
-                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">5,000 €</div>
-                </div>
-                <div style="flex:1; min-width:200px; text-align:center;">
-                    <p><strong>Restante</strong></p>
-                    <div style="background:#f4f6f9; padding:20px; border-radius:8px; font-size:1.5rem;">10,000 €</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TABLA PRESUPUESTOS -->
-        <div class="chart-card">
-            <h2 class="chart-title">Presupuestos</h2>
-
-            <div style="padding:1.5rem; overflow-x:auto;">
-                <table style="width:100%; border-collapse:collapse;">
+            <div class="table-container">
+                <table class="data-table" id="tabla-presupuestos">
+                    <colgroup>
+                        <col style="width:45%">
+                        <col style="width:15%">
+                        <col style="width:25%">
+                        <col style="width:15%">
+                    </colgroup>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Departamento</th>
                             <th>Año</th>
-                            <th>Asignado</th>
-                            <th>Gastado</th>
-                            <th>Restante</th>
+                            <th>Cantidad (€)</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Informática</td>
-                            <td>2026</td>
-                            <td>15000€</td>
-                            <td>5000€</td>
-                            <td>10000€</td>
-                            <td>
-                                <button class="submit-btn">Editar</button>
-                                <button class="submit-btn">Eliminar</button>
-                            </td>
-                        </tr>
+                    <tbody id="tbody-presupuestos">
+                        <tr><td colspan="4" class="tabla-vacia">Cargando…</td></tr>
                     </tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
-        <!-- PLAN DE INVERSION -->
-        <div class="chart-card" style="margin-top:2rem;">
-            <h2 class="chart-title">Plan de Inversión</h2>
+        <!-- ── ASIGNAR PLAN DE INVERSIÓN ── -->
+        <section class="chart-card orden-form-card">
+            <h2 class="chart-title">Asignar Plan de Inversión — <span id="anio-plan"></span></h2>
 
-            <div class="form-section" style="padding:1.5rem;">
-                <form>
-                    <div class="input-group">
-                        <label>Número de Plan (7 dígitos)</label>
-                        <input type="text" placeholder="0001234">
+            <div class="orden-form">
+                <form id="form-plan">
+                    <div class="form-row">
+                        <div class="input-group flex-2">
+                            <label for="plan-departamento">Departamento</label>
+                            <select id="plan-departamento" class="input-select" required>
+                                <option value="" disabled selected>Selecciona un departamento…</option>
+                            </select>
+                        </div>
+                        <div class="input-group flex-2">
+                            <label for="plan-monto">Cantidad (€)</label>
+                            <input type="number" id="plan-monto" min="0.01" step="0.01" placeholder="0,00" required>
+                        </div>
                     </div>
-
-                    <div class="input-group">
-                        <label>Descripción</label>
-                        <textarea></textarea>
+                    <div class="form-row form-row-btn">
+                        <button type="submit" class="submit-btn btn-auto">+ Guardar Plan</button>
                     </div>
-
-                    <button class="submit-btn">Guardar Plan</button>
                 </form>
             </div>
 
-            <div style="padding:1.5rem; overflow-x:auto;">
-                <table style="width:100%; border-collapse:collapse;">
+            <div class="table-container">
+                <table class="data-table" id="tabla-planes">
+                    <colgroup>
+                        <col style="width:45%">
+                        <col style="width:15%">
+                        <col style="width:25%">
+                        <col style="width:15%">
+                    </colgroup>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Departamento</th>
                             <th>Año</th>
-                            <th>Plan</th>
-                            <th>Descripción</th>
+                            <th>Cantidad (€)</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>2026</td>
-                            <td>0001234</td>
-                            <td>Compra de equipos</td>
-                        </tr>
+                    <tbody id="tbody-planes">
+                        <tr><td colspan="4" class="tabla-vacia">Cargando…</td></tr>
                     </tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
     </div>
 

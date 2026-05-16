@@ -15,7 +15,13 @@
     <script>
         fetch('SesionServlet').then(r=>r.json()).then(d=>{
             if(d.role==='dept_manager') window.location.replace('viewMenu.html');
-            else document.body.style.visibility='visible';
+            else {
+                document.body.style.visibility='visible';
+                if(d.role !== 'admin') {
+                    const presLink = document.querySelector('a[href="viewPresupuesto.html"]');
+                    if(presLink) presLink.remove();
+                }
+            }
         }).catch(()=>{document.body.style.visibility='visible'});
     </script>
 </head>
@@ -51,8 +57,9 @@
 
     <!-- Barra de navegación secundaria (ancho completo) -->
     <nav class="top-nav">
+        <a href="viewMenuAdmin.html" class="top-nav-btn">Menú</a>
         <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
-        <a href="viewOrdenesAdmin.html" class="top-nav-btn">Órdenes de Compra</a>
+        <a href="viewOrdenesAdmin.html" class="top-nav-btn">Órdenes</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
     </nav>

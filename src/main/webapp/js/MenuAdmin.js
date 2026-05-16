@@ -1,74 +1,20 @@
 /* ===== JS PANEL ADMINISTRADOR ===== */
-/* Gráficas de barras horizontales apiladas por departamento */
-
-// ── Departamentos ─────────────────────────────────────────────
-const nombresDepartamentos = [
-    'Informática',        'Mecánica',        'Electricidad',
-    'Automoción',         'Grado Básico',    'Telecomunicaciones',
-    'Robótica',           'Primaria',         'Infantil',
-    'Secundaria',         'Bachillerato',     'SAT',
-    'Mantenimiento',      'Premio Don Bosco', 'Formación',
-    'Administración'
-];
-
-// ── Datos de PRESUPUESTOS (€) ─────────────────────────────────
-// Sustituir por datos reales desde la API / BD
-const presupuestosTotal = [
-    18000, 22000, 15000, 20000, 12000,
-    16000, 14000, 25000, 10000, 30000,
-    28000,  8000, 11000,  5000, 13000,
-    19000
-];
-const presupuestosGastado = [
-    11200, 17800,  9500, 14300,  6000,
-    10500,  8200, 19000,  7800, 22000,
-    15000,  4500,  7200,  3100,  9000,
-    12000
-];
-
-// ── Datos de INVERSIÓN (€) ────────────────────────────────────
-const inversionTotal = [
-    35000, 40000, 28000, 32000, 18000,
-    25000, 22000, 15000, 12000, 45000,
-    38000, 10000, 20000,  8000, 17000,
-    30000
-];
-const inversionEjecutado = [
-    22000, 31000, 14000, 20000,  9000,
-    18000, 11000, 10000,  5500, 30000,
-    25000,  6000, 13000,  4000, 11000,
-    18500
-];
+/* v2 — datos reales desde AdminChartServlet */
 
 // ── Colores ───────────────────────────────────────────────────
-const COLOR_GASTADO    = '#c96464f3';
-const COLOR_TOTAL      = '#82a87ce7';
+const COLOR_GASTADO = '#c96464f3';
+const COLOR_TOTAL   = '#82a87ce7';
 
 // ── Formatear euros ───────────────────────────────────────────
 function fmt(val) {
     return val.toLocaleString('es-ES') + ' €';
 }
 
-// ── Calcular disponible/pendiente ─────────────────────────────
 function calcResto(total, gastado) {
     return total.map((t, i) => Math.max(0, t - gastado[i]));
 }
 
-// ── Plugin personalizado para el tooltip ──────────────────────
-// Muestra: Total, Gastado y Disponible para el departamento
-function makeTooltipPlugin(totalArr, gastadoArr, labelGastado, labelResto) {
-    return {
-        id: 'customTooltip',
-        afterInit(chart) {
-            chart._customTotal   = totalArr;
-            chart._customGastado = gastadoArr;
-            chart._labelGastado  = labelGastado;
-            chart._labelResto    = labelResto;
-        }
-    };
-}
-
-// ── Opciones comunes ──────────────────────────────────────────
+// ── Opciones comunes de gráfica ───────────────────────────────
 function getOptions(totalArr, gastadoArr, labelGastado, labelResto) {
     return {
         indexAxis: 'y',
@@ -78,19 +24,15 @@ function getOptions(totalArr, gastadoArr, labelGastado, labelResto) {
             legend: { display: false },
             tooltip: {
                 callbacks: {
-                    // Título: nombre del departamento
-                    title: function(items) {
-                        return items[0].label;
-                    },
-                    // Cuerpo: siempre muestra Total, Gastado y Disponible
-                    beforeBody: function() { return null; },
-                    label: function() { return null; },   // anulamos la línea por dataset
-                    afterBody: function(items) {
-                        const i      = items[0].dataIndex;
-                        const total  = totalArr[i];
-                        const gast   = gastadoArr[i];
-                        const resto  = Math.max(0, total - gast);
-                        const pct    = total > 0 ? Math.round((gast / total) * 100) : 0;
+                    title: items => items[0].label,
+                    beforeBody: () => null,
+                    label: () => null,
+                    afterBody(items) {
+                        const i     = items[0].dataIndex;
+                        const total = totalArr[i];
+                        const gast  = gastadoArr[i];
+                        const resto = Math.max(0, total - gast);
+                        const pct   = total > 0 ? Math.round((gast / total) * 100) : 0;
                         return [
                             `Total:        ${fmt(total)}`,
                             `${labelGastado}:   ${fmt(gast)}  (${pct}%)`,
@@ -98,7 +40,6 @@ function getOptions(totalArr, gastadoArr, labelGastado, labelResto) {
                         ];
                     }
                 },
-                // Estilos del tooltip
                 backgroundColor: 'rgba(255,255,255,0.97)',
                 titleColor: '#222',
                 bodyColor: '#555',
@@ -124,10 +65,7 @@ function getOptions(totalArr, gastadoArr, labelGastado, labelResto) {
             },
             y: {
                 stacked: true,
-                ticks: {
-                    color: '#444',
-                    font: { size: 11, weight: '600' }
-                },
+                ticks: { color: '#444', font: { size: 11, weight: '600' } },
                 grid: { display: false },
                 border: { display: false }
             }
@@ -135,34 +73,76 @@ function getOptions(totalArr, gastadoArr, labelGastado, labelResto) {
     };
 }
 
-// ── Gráfica 1: Presupuestos ───────────────────────────────────
-const ctxPres = document.getElementById('chartPresupuestosAdmin').getContext('2d');
+// ── Construir gráfica ─────────────────────────────────────────
+function buildChart(canvasId, labels, total, gastado, labelGastado, labelResto) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) { console.error('Canvas no encontrado:', canvasId); return; }
+    const ctx = canvas.getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: labelGastado,
+                    data: gastado,
+                    backgroundColor: COLOR_GASTADO,
+                    borderRadius: { topLeft: 4, bottomLeft: 4 },
+                    borderSkipped: false,
+                    order: 1
+                },
+                {
+                    label: labelResto,
+                    data: calcResto(total, gastado),
+                    backgroundColor: COLOR_TOTAL,
+                    borderRadius: { topRight: 4, bottomRight: 4 },
+                    borderSkipped: false,
+                    order: 2
+                }
+            ]
+        },
+        options: getOptions(total, gastado, labelGastado, labelResto)
+    });
+}
 
-new Chart(ctxPres, {
-    type: 'bar',
-    data: {
-        labels: nombresDepartamentos,
-        datasets: [
-            {
-                label: 'Gastado',
-                data: presupuestosGastado,
-                backgroundColor: COLOR_GASTADO,
-                borderRadius: { topLeft: 4, bottomLeft: 4 },
-                borderSkipped: false,
-                order: 1
-            },
-            {
-                label: 'Disponible',
-                data: calcResto(presupuestosTotal, presupuestosGastado),
-                backgroundColor: COLOR_TOTAL,
-                borderRadius: { topRight: 4, bottomRight: 4 },
-                borderSkipped: false,
-                order: 2
-            }
-        ]
-    },
-    options: getOptions(presupuestosTotal, presupuestosGastado, 'Gastado', 'Disponible')
-});
+// ── Mostrar error visible en los wrappers de las gráficas ─────
+function mostrarErrorGraficas(msg) {
+    ['chartPresupuestosAdmin', 'chartInversionAdmin'].forEach(id => {
+        const canvas = document.getElementById(id);
+        if (canvas && canvas.parentElement) {
+            canvas.style.display = 'none';
+            const div = document.createElement('p');
+            div.style.cssText = 'text-align:center;color:#c70303;padding:2rem;font-size:13px;';
+            div.textContent = 'Error al cargar datos: ' + msg;
+            canvas.parentElement.appendChild(div);
+        }
+    });
+}
+
+// ── Cargar datos reales y pintar gráficas ─────────────────────
+fetch('AdminChartServlet')
+    .then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status + ' — ¿Sesión caducada?');
+        return r.json();
+    })
+    .then(data => {
+        if (data.error) throw new Error(data.error);
+
+        console.log('AdminChartServlet OK — depts:', data.departamentos.length);
+
+        const labels      = data.departamentos;
+        const presTotal   = data.presupuestos.total.map(Number);
+        const presGastado = data.presupuestos.gastado.map(Number);
+        const planTotal   = data.planes.total.map(Number);
+        const planGastado = data.planes.gastado.map(Number);
+
+        buildChart('chartPresupuestosAdmin', labels, presTotal,  presGastado,  'Gastado',   'Disponible');
+        buildChart('chartInversionAdmin',    labels, planTotal,  planGastado,  'Ejecutado', 'Pendiente');
+    })
+    .catch(err => {
+        console.error('AdminChartServlet error:', err.message);
+        mostrarErrorGraficas(err.message);
+    });
 
 // ── Navegación al departamento ────────────────────────────────
 function irADepto() {
@@ -174,31 +154,16 @@ function irADepto() {
     window.location.href = `viewOrdenesAdmin.html?depto=${val}`;
 }
 
-// ── Gráfica 2: Planes de Inversión ───────────────────────────
-const ctxInv = document.getElementById('chartInversionAdmin').getContext('2d');
-
-new Chart(ctxInv, {
-    type: 'bar',
-    data: {
-        labels: nombresDepartamentos,
-        datasets: [
-            {
-                label: 'Ejecutado',
-                data: inversionEjecutado,
-                backgroundColor: COLOR_GASTADO,
-                borderRadius: { topLeft: 4, bottomLeft: 4 },
-                borderSkipped: false,
-                order: 1
-            },
-            {
-                label: 'Pendiente',
-                data: calcResto(inversionTotal, inversionEjecutado),
-                backgroundColor: COLOR_TOTAL,
-                borderRadius: { topRight: 4, bottomRight: 4 },
-                borderSkipped: false,
-                order: 2
-            }
-        ]
-    },
-    options: getOptions(inversionTotal, inversionEjecutado, 'Ejecutado', 'Pendiente')
+// ── Transiciones suaves entre páginas ────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', e => {
+            if (link.target === '_blank' || e.ctrlKey || e.metaKey) return;
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+            e.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => { window.location.href = link.href; }, 300);
+        });
+    });
 });

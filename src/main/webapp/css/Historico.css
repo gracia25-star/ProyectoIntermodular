@@ -1,5 +1,5 @@
 /* ===== HISTÓRICO - ESTILOS ESPECÍFICOS ===== */
-/* Complementa Registro.css y Menu.css          */
+/* Mantiene estética original de la aplicación */
 
 /* ── Nav activo ── */
 .top-nav-btn.active-nav {
@@ -19,92 +19,127 @@
     border-radius: 2px;
 }
 
-/* ── Selector de año ── */
-.year-select {
-    padding: 10px 40px 10px 14px;
+/* ── Fila de filtros ── */
+.filtros-row {
+    padding: 1.5rem;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filtro-item {
+    flex: 1;
+    min-width: 160px;
+}
+
+.filtro-label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+/* ── Banner informativo dept/año ── */
+.info-vista-banner {
+    background: rgba(189, 15, 15, 0.08);
+    border-left: 4px solid #bd0f0f;
+    border-radius: 10px;
+    padding: 12px 20px;
+    color: #bd0f0f;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.2px;
+}
+
+/* ── Importe negativo (sobrepasado) ── */
+.importe-negativo {
+    color: #c70303;
+    font-weight: 700;
+}
+
+/* ── Selector de filtros ── */
+.filtro-select {
+    width: 100%;
+    padding: 10px 14px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 14px;
     font-family: 'Inter', sans-serif;
-    background: #f9f9fa;
+    background: white;
     color: #333;
     cursor: pointer;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
-    transition: border-color 0.2s ease;
+    padding-right: 40px;
+    transition: all 0.2s ease;
 }
 
-.year-select:focus {
+.filtro-select:hover {
+    border-color: #bd0f0f;
+}
+
+.filtro-select:focus {
     outline: none;
-    border-color: #c70303;
+    border-color: #bd0f0f;
+    box-shadow: 0 0 0 3px rgba(189, 15, 15, 0.1);
 }
 
-/* ── Tablas dentro de chart-card ── */
-.chart-card table {
+/* ── Tablas del histórico ── */
+.tabla-historico {
     width: 100%;
     border-collapse: collapse;
+    font-size: 14px;
 }
 
-.chart-card table thead th {
-    padding: 12px 10px;
-    border-bottom: 2px solid #ddd;
-    background-color: #f8f9fa;
-    color: #333;
+.tabla-historico thead th {
+    padding: 14px 12px;
+    background-color: rgba(238, 218, 218, 0.3);
+    color: #bd0f0f;
     font-weight: 700;
     text-align: left;
+    border-bottom: 2px solid #bd0f0f;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-size: 12px;
 }
 
-.chart-card table tbody td {
-    padding: 12px 10px;
-    border-bottom: 1px solid #eee;
+.tabla-historico tbody td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #e5e7eb;
     color: #555;
     transition: background-color 0.2s ease;
 }
 
-.chart-card table tbody tr:hover td {
-    background-color: #f1f5f9;
+.tabla-historico tbody tr:hover td {
+    background-color: rgba(238, 218, 218, 0.2);
 }
 
-/* ── Cards de resumen del año ── */
-.resumen-valor {
-    background: #f4f6f9;
-    padding: 20px;
-    border-radius: 8px;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #333;
-    text-align: center;
+.tabla-historico tbody tr:last-child td {
+    border-bottom: none;
 }
 
-/* ── Estado de presupuesto cerrado/abierto ── */
-.estado-cerrado {
-    color: #16a34a;
-    font-weight: 600;
-}
-
-.estado-abierto {
-    color: #d97706;
-    font-weight: 600;
-}
-
-/* ── Órdenes históricas: estado ── */
-.status-badge {
+/* ── Estados en órdenes ── */
+.estado-badge {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
+    text-align: center;
 }
 
-.status-badge.aprobada {
-    background: #dcfce7;
+.estado-aprobada {
+    background: rgba(34, 197, 94, 0.15);
     color: #16a34a;
 }
 
-.status-badge.pendiente {
-    background: #fef3c7;
+.estado-pendiente {
+    background: rgba(249, 115, 22, 0.15);
     color: #d97706;
 }
 
@@ -113,14 +148,69 @@
     text-align: center;
     color: #aaa;
     font-style: italic;
-    padding: 24px;
+    padding: 32px 24px;
+    font-size: 14px;
+}
+
+/* ── Chart card (heredado) ── */
+.chart-card {
+    background: rgba(238, 218, 218, 0.462);
+    border-radius: 20px;
+    padding: 28px 24px 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+.chart-title {
+    color: #bd0f0f;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    margin: 0 0 1.5rem 0;
+    text-align: left;
+}
+
+/* ── Animaciones ── */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tabla-historico {
+    animation: fadeIn 0.3s ease-in;
 }
 
 /* ── Responsivo ── */
 @media (max-width: 768px) {
-    .chart-card table thead th,
-    .chart-card table tbody td {
-        padding: 8px 6px;
+    .tabla-historico thead th,
+    .tabla-historico tbody td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .filtro-select {
+        padding: 10px 14px;
         font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabla-historico {
+        font-size: 11px;
+    }
+
+    .tabla-historico thead th,
+    .tabla-historico tbody td {
+        padding: 8px 6px;
     }
 }

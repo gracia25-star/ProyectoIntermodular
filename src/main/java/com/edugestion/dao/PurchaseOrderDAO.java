@@ -145,6 +145,17 @@ public class PurchaseOrderDAO {
         }
     }
 
+    // ── Actualizar estado de una orden ───────────────────────
+    public void updateStatus(int codeOrder, String status) throws SQLException {
+        String sql = "UPDATE purchase_order SET Status = ? WHERE Code_order = ?";
+        try (Connection con = ConexionBD.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, codeOrder);
+            ps.executeUpdate();
+        }
+    }
+
     // ── Añadir/actualizar comentario del admin ───────────────
     public void addComment(int codeOrder, String comment) throws SQLException {
         String sql = "UPDATE purchase_order SET Comment = ? WHERE Code_order = ?";

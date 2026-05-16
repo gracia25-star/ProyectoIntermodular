@@ -14,7 +14,13 @@
     <script>
         fetch('SesionServlet').then(r=>r.json()).then(d=>{
             if(d.role==='dept_manager') window.location.replace('viewOrdenes.html');
-            else document.body.style.visibility='visible';
+            else {
+                document.body.style.visibility='visible';
+                if(d.role !== 'admin') {
+                    const presLink = document.querySelector('a[href="viewPresupuesto.html"]');
+                    if(presLink) presLink.remove();
+                }
+            }
         }).catch(()=>{document.body.style.visibility='visible'});
     </script>
 </head>
@@ -49,42 +55,27 @@
 
     <!-- Barra de navegación secundaria -->
     <nav class="top-nav">
+        <a href="viewMenuAdmin.html" class="top-nav-btn">Menú</a>
         <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
-        <a href="viewOrdenesAdmin.html" class="top-nav-btn active-nav">Órdenes de Compra</a>
+        <a href="viewOrdenesAdmin.html" class="top-nav-btn">Órdenes</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
     </nav>
 
     <div class="menu-container">
 
-        <!-- ── Filtro por departamento ── -->
+        <!-- Filtro por departamento -->
         <section class="chart-card filtro-card">
             <div class="filtro-row">
                 <label for="filtro-depto" class="filtro-label">Departamento</label>
                 <select id="filtro-depto" class="input-select filtro-select" onchange="filtrarDepto()">
-                    <option value="todos">Todos los departamentos</option>
-                    <option value="INFO">Informática (INFO)</option>
-                    <option value="MECA">Mecánica (MECA)</option>
-                    <option value="ELTA">Electricidad (ELTA)</option>
-                    <option value="AUTO">Automoción (AUTO)</option>
-                    <option value="FPGB">Grado Básico (FPGB)</option>
-                    <option value="TELE">Telecomunicaciones (TELE)</option>
-                    <option value="ROBO">Robótica (ROBO)</option>
-                    <option value="PRI">Primaria (PRI)</option>
-                    <option value="INF">Infantil (INF)</option>
-                    <option value="ESO">Secundaria (ESO)</option>
-                    <option value="BAC">Bachillerato (BAC)</option>
-                    <option value="SAT">SAT (SAT)</option>
-                    <option value="MANT">Mantenimiento (MANT)</option>
-                    <option value="PDB">Premio Don Bosco (PDB)</option>
-                    <option value="FOR">Formación (FOR)</option>
-                    <option value="ADM">Administración (ADM)</option>
+                    <option value="0">Todos los departamentos</option>
                 </select>
-                <span id="filtro-total" class="filtro-total">Mostrando todas las órdenes</span>
+                <span id="filtro-total" class="filtro-total">Cargando...</span>
             </div>
         </section>
 
-        <!-- ── Tabla de órdenes ── -->
+        <!-- Tabla de órdenes -->
         <section class="chart-card orden-table-card">
             <h2 class="chart-title" id="tabla-titulo">Todas las Órdenes</h2>
             <div class="table-container">
@@ -97,96 +88,11 @@
                             <th>Proveedor</th>
                             <th>Importe</th>
                             <th>Estado</th>
-                            <th>Factura</th>
                             <th>Notas</th>
                         </tr>
                     </thead>
                     <tbody id="ordenes-admin-tbody">
-                        <!-- Datos de ejemplo — en producción vienen del back -->
-                        <tr data-depto="INFO">
-                            <td class="ref-cell">ORD-2025-001</td>
-                            <td><span class="depto-badge">INFO</span></td>
-                            <td>12/01/2025</td>
-                            <td>Informática del Ebro</td>
-                            <td class="importe-cell">1.250,00 €</td>
-                            <td>
-                                <select class="estado-select estado-green" onchange="cambiarEstado(this)">
-                                    <option value="pendiente">Pendiente</option>
-                                    <option value="aprobada" selected>Aprobada</option>
-                                    <option value="rechazada">Rechazada</option>
-                                </select>
-                            </td>
-                            <td><a href="#" class="pdf-link" title="Ver factura">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>PDF</a>
-                            </td>
-                            <td><button class="notas-btn has-nota" onclick="abrirNotasAdmin(this)"
-                                data-desc="Compra de 10 licencias software educativo"
-                                data-obs="Aprobado por dirección el 15/01">💬</button></td>
-                        </tr>
-                        <tr data-depto="MECA">
-                            <td class="ref-cell">ORD-2025-002</td>
-                            <td><span class="depto-badge">MECA</span></td>
-                            <td>28/01/2025</td>
-                            <td>TechSupply España</td>
-                            <td class="importe-cell">3.800,00 €</td>
-                            <td>
-                                <select class="estado-select estado-orange" onchange="cambiarEstado(this)">
-                                    <option value="pendiente" selected>Pendiente</option>
-                                    <option value="aprobada">Aprobada</option>
-                                    <option value="rechazada">Rechazada</option>
-                                </select>
-                            </td>
-                            <td><span class="no-pdf">—</span></td>
-                            <td><button class="notas-btn has-nota" onclick="abrirNotasAdmin(this)"
-                                data-desc="Equipos de laboratorio para taller mecánica"
-                                data-obs="">💬</button></td>
-                        </tr>
-                        <tr data-depto="INFO">
-                            <td class="ref-cell">ORD-2025-003</td>
-                            <td><span class="depto-badge">INFO</span></td>
-                            <td>05/02/2025</td>
-                            <td>Papelería Martínez</td>
-                            <td class="importe-cell">420,50 €</td>
-                            <td>
-                                <select class="estado-select estado-red" onchange="cambiarEstado(this)">
-                                    <option value="pendiente">Pendiente</option>
-                                    <option value="aprobada">Aprobada</option>
-                                    <option value="rechazada" selected>Rechazada</option>
-                                </select>
-                            </td>
-                            <td><a href="#" class="pdf-link">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>PDF</a>
-                            </td>
-                            <td><button class="notas-btn has-nota" onclick="abrirNotasAdmin(this)"
-                                data-desc="Material de oficina trimestre 1"
-                                data-obs="Rechazada: excede presupuesto disponible">💬</button></td>
-                        </tr>
-                        <tr data-depto="ELTA">
-                            <td class="ref-cell">ORD-2025-004</td>
-                            <td><span class="depto-badge">ELTA</span></td>
-                            <td>10/02/2025</td>
-                            <td>Electrónica Zaragoza S.A.</td>
-                            <td class="importe-cell">870,00 €</td>
-                            <td>
-                                <select class="estado-select estado-orange" onchange="cambiarEstado(this)">
-                                    <option value="pendiente" selected>Pendiente</option>
-                                    <option value="aprobada">Aprobada</option>
-                                    <option value="rechazada">Rechazada</option>
-                                </select>
-                            </td>
-                            <td><span class="no-pdf">—</span></td>
-                            <td><button class="notas-btn has-nota" onclick="abrirNotasAdmin(this)"
-                                data-desc="Componentes para prácticas de circuitos"
-                                data-obs="">💬</button></td>
-                        </tr>
+                        <tr><td colspan="7" class="tabla-vacia-admin">Cargando órdenes...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -194,7 +100,7 @@
 
     </div>
 
-    <!-- ── Modal de Notas (Admin) ── -->
+    <!-- Modal de Notas (Admin) -->
     <div id="modal-overlay" class="modal-overlay" onclick="cerrarModalAdmin(event)">
         <div class="modal-popup">
             <button class="modal-close" onclick="cerrarModalBtn()">✕</button>
@@ -204,15 +110,6 @@
             <div class="modal-seccion">
                 <label class="modal-label">Descripción del jefe de departamento</label>
                 <p id="modal-desc" class="modal-texto-readonly"></p>
-            </div>
-
-            <!-- Gestión de factura PDF -->
-            <div class="modal-seccion">
-                <label class="modal-label">Factura (PDF)</label>
-                <div id="modal-pdf-zona">
-                    <!-- Se rellena dinámicamente desde JS según haya o no PDF -->
-                </div>
-                <input type="file" id="modal-pdf-input" accept=".pdf" class="file-input-hidden" onchange="subirPdfAdmin(this)">
             </div>
 
             <!-- Observaciones del admin (editable) -->

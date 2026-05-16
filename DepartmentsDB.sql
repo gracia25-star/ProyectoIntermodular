@@ -60,7 +60,7 @@ CREATE TABLE purchase_order (
 	Id_supplier INT UNSIGNED,
 	Status VARCHAR(20) NOT NULL DEFAULT 'pending',
 	Comment TEXT NULL,
-	CHECK (Status IN ('pending', 'approved')),
+	CHECK (Status IN ('pending', 'approved', 'rejected')),
 	FOREIGN KEY (Id_budget) REFERENCES budget(Id_budget) ON DELETE RESTRICT,
 	FOREIGN KEY (Id_supplier) REFERENCES supplier(Id_supplier) ON DELETE RESTRICT
 );
