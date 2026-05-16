@@ -21,13 +21,21 @@ public class SesionServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("role") != null) {
-            String role   = (String) session.getAttribute("role");
-            String nombre = (String) session.getAttribute("nombre");
+            String role     = (String) session.getAttribute("role");
+            String nombre   = (String) session.getAttribute("nombre");
+            String deptName = (String) session.getAttribute("deptName");
             response.getWriter().write(
-                "{\"role\":\"" + role + "\",\"nombre\":\"" + (nombre != null ? nombre : "") + "\"}"
+                "{\"role\":\"" + role + "\"" +
+                ",\"nombre\":\"" + esc(nombre) + "\"" +
+                ",\"deptName\":\"" + esc(deptName) + "\"}"
             );
         } else {
             response.getWriter().write("{\"role\":null}");
         }
+    }
+
+    private String esc(String s) {
+        if (s == null) return "";
+        return s.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 }

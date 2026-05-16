@@ -14,14 +14,16 @@ const svgPdf = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strok
      <line x1="10" y1="9" x2="8" y2="9"/>
 </svg>`;
 
-// ── Al cargar: poblar departamentos y cargar órdenes ──────────
-document.addEventListener('DOMContentLoaded', () => {
-    poblarDepartamentos();
+// ── Al cargar: esperar rol y poblar departamentos ─────────────
+document.addEventListener('DOMContentLoaded', async () => {
+    if (window._rolePromise) await window._rolePromise;
 
     // Si viene ?depto=N desde el menú admin, preseleccionar por nombre
     const params = new URLSearchParams(window.location.search);
     const deptParam = params.get('depto');
     if (deptParam) window._deptPreselect = deptParam;
+
+    poblarDepartamentos();
 });
 
 // ── Poblar select de departamentos desde el servidor ─────────
@@ -94,11 +96,17 @@ async function cargarOrdenes(deptCode) {
     }
 }
 
-// ── Clase CSS según estado ────────────────────────────────────
+// ── Clase CSS y texto según estado ───────────────────────────
 function claseEstado(status) {
     if (status === 'approved') return 'estado-green';
     if (status === 'rejected') return 'estado-red';
     return 'estado-orange';
+}
+
+function estadoTexto(status) {
+    if (status === 'approved') return 'Aprobada';
+    if (status === 'rejected') return 'Rechazada';
+    return 'Pendiente';
 }
 
 // ── Construir fila HTML — datos complejos NO van en atributos ─
@@ -112,6 +120,20 @@ function buildFila(o) {
            </button>`
         : '<span class="no-pdf">—</span>';
 
+    const esContable = window._userRole === 'accountant';
+    const estadoCell = esContable
+        ? `<span class="estado-select ${claseEstado(o.status)}"
+                 style="cursor:default;pointer-events:none;display:inline-block;">
+               ${estadoTexto(o.status)}
+           </span>`
+        : `<select class="estado-select ${claseEstado(o.status)}"
+                   data-code-order="${o.codeOrder}"
+                   onchange="cambiarEstado(this)">
+               <option value="pending"  ${o.status === 'pending'  ? 'selected' : ''}>Pendiente</option>
+               <option value="approved" ${o.status === 'approved' ? 'selected' : ''}>Aprobada</option>
+               <option value="rejected" ${o.status === 'rejected' ? 'selected' : ''}>Rechazada</option>
+           </select>`;
+
     return `
         <tr>
             <td class="ref-cell">${esc(o.orderReference)}</td>
@@ -119,15 +141,7 @@ function buildFila(o) {
             <td>${esc(o.date)}</td>
             <td>${esc(o.supplierName)}</td>
             <td class="importe-cell">${formatEuros(o.amount)}</td>
-            <td>
-                <select class="estado-select ${claseEstado(o.status)}"
-                        data-code-order="${o.codeOrder}"
-                        onchange="cambiarEstado(this)">
-                    <option value="pending"  ${o.status === 'pending'  ? 'selected' : ''}>Pendiente</option>
-                    <option value="approved" ${o.status === 'approved' ? 'selected' : ''}>Aprobada</option>
-                    <option value="rejected" ${o.status === 'rejected' ? 'selected' : ''}>Rechazada</option>
-                </select>
-            </td>
+            <td>${estadoCell}</td>
             <td>${facturaCell}</td>
             <td>
                 <button class="notas-btn ${tieneNota ? 'has-nota' : ''}"
@@ -166,8 +180,13 @@ function abrirNotasAdmin(btn) {
     document.getElementById('modal-ref').textContent  = o.orderReference || '';
     document.getElementById('modal-desc').textContent = o.description    || '(Sin descripción)';
     document.getElementById('modal-obs').value        = o.comment        || '';
+
+    const soloLectura = window._userRole === 'accountant';
+    document.getElementById('modal-obs').readOnly = soloLectura;
+    document.getElementById('modal-footer').style.display = soloLectura ? 'none' : '';
+
     document.getElementById('modal-overlay').classList.add('visible');
-    document.getElementById('modal-obs').focus();
+    if (!soloLectura) document.getElementById('modal-obs').focus();
 }
 
 // ── Guardar observaciones → BD ────────────────────────────────

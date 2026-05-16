@@ -15,19 +15,21 @@
             visibility: hidden
         }
     </style>
+    <script src="js/userInfo.js"></script>
     <script>
-        fetch('SesionServlet').then(r => r.json()).then(d => {
-            if (d.role === 'dept_manager') window.location.replace('viewOrdenes.html');
-            else {
-                document.body.style.visibility = 'visible';
-                if (d.role === 'admin') {
-                    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
-                } else {
-                    const presLink = document.querySelector('a[href="viewPresupuesto.html"]');
-                    if (presLink) presLink.remove();
-                }
+        window._rolePromise = fetch('SesionServlet').then(r => r.json()).then(d => {
+            if (d.role === 'dept_manager') { window.location.replace('viewOrdenes.html'); return null; }
+            window._userRole = d.role;
+            initUserInfo(d);
+            document.body.style.visibility = 'visible';
+            if (d.role === 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+            } else {
+                const presLink = document.querySelector('a[href="viewPresupuesto.html"]');
+                if (presLink) presLink.remove();
             }
-        }).catch(() => { document.body.style.visibility = 'visible' });
+            return d.role;
+        }).catch(() => { document.body.style.visibility = 'visible'; });
     </script>
 </head>
 
@@ -49,8 +51,8 @@
             </div>
             <div class="user-dropdown">
                 <div class="user-dropdown-header">
-                    <div class="user-name">Usuario Admin</div>
-                    <div class="user-role">Administrador</div>
+                    <div class="user-name" id="user-name">Usuario</div>
+                    <div class="user-role" id="user-role">Cargando...</div>
                 </div>
                 <a href="LogoutServlet" class="logout-btn">
                     <span>Cerrar Sesión</span>
@@ -140,7 +142,7 @@
                     rows="3"></textarea>
             </div>
 
-            <div class="modal-footer">
+            <div class="modal-footer" id="modal-footer">
                 <button class="submit-btn btn-auto" onclick="guardarObservaciones()">Guardar</button>
             </div>
         </div>

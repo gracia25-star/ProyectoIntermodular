@@ -132,7 +132,7 @@ public class AdminOrderServlet extends HttpServlet {
             return;
         }
         String role = (String) session.getAttribute("role");
-        if (!"admin".equals(role) && !"accountant".equals(role)) {
+        if (!"admin".equals(role)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write("{\"ok\":false,\"error\":\"Acceso no permitido\"}");
             return;

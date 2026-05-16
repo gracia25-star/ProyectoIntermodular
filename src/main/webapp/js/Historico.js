@@ -13,8 +13,7 @@ fetch('SesionServlet')
     .then(r => r.json())
     .then(d => {
         userRole = d.role;
-        const rolEl = document.getElementById('rolUsuario');
-        if (rolEl) rolEl.textContent = userRole || 'Usuario';
+        if (window.initUserInfo) initUserInfo(d);
         if (userRole !== 'admin') {
             const presLink = document.querySelector('a[href="viewPresupuesto.html"]');
             if (presLink) presLink.remove();

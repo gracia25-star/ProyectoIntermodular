@@ -28,8 +28,8 @@
             </div>
             <div class="user-dropdown">
                 <div class="user-dropdown-header">
-                    <div class="user-name">Usuario</div>
-                    <div class="user-role" id="rolUsuario">Administrador</div>
+                    <div class="user-name" id="user-name">Usuario</div>
+                    <div class="user-role" id="user-role">Cargando...</div>
                 </div>
                 <a href="LogoutServlet" class="logout-btn">Cerrar Sesión</a>
             </div>
@@ -140,6 +140,10 @@
                     </optgroup>
                 </select>
             </div>
+            <div class="input-group">
+                <label for="edit-password">Nueva contraseña <span style="font-weight:normal;color:#888;">(dejar vacío para no cambiar)</span></label>
+                <input type="password" id="edit-password" placeholder="Nueva contraseña">
+            </div>
             <div style="margin-top:1.5rem; display:flex; gap:1rem;">
                 <button class="submit-btn" style="padding:0.8rem 2rem;" onclick="guardarEdicion()">Guardar</button>
                 <button class="submit-btn" style="padding:0.8rem 2rem; background:#6c757d;" onclick="cerrarModalEditar()">Cancelar</button>
@@ -147,14 +151,15 @@
         </div>
     </div>
 
+    <script src="js/userInfo.js"></script>
     <script>
         fetch('SesionServlet').then(r=>r.json()).then(d=>{
             if(d.role !== 'admin') {
                 alert("No tienes permiso para acceder a esta página.");
                 window.location.replace('viewMenu.html');
             } else {
+                initUserInfo(d);
                 document.getElementById("navAdminUsuarios").style.display = "inline-block";
-                document.getElementById("rolUsuario").innerText = d.nombre || "Administrador";
             }
         }).catch(()=>{
             window.location.replace('viewMenu.html');

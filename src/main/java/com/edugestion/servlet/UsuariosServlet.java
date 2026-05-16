@@ -1,6 +1,7 @@
 package com.edugestion.servlet;
 
 import com.edugestion.util.ConexionBD;
+import com.edugestion.util.PasswordUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -75,10 +76,11 @@ public class UsuariosServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            String idParam = request.getParameter("id");
-            String nombre  = request.getParameter("nombre");
-            String email   = request.getParameter("email");
-            String rolParam = request.getParameter("rol");
+            String idParam       = request.getParameter("id");
+            String nombre        = request.getParameter("nombre");
+            String email         = request.getParameter("email");
+            String rolParam      = request.getParameter("rol");
+            String nuevaContrasena = request.getParameter("nueva_contrasena");
 
             if (idParam == null || nombre == null || nombre.isBlank()
                     || email == null || email.isBlank()
@@ -110,13 +112,26 @@ public class UsuariosServlet extends HttpServlet {
             }
 
             try (Connection con = ConexionBD.getConnection()) {
-                String sql = "UPDATE `user` SET Name=?, Email=?, Code_role=?, Code_dept=? WHERE Id_user=?";
-                PreparedStatement ps = con.prepareStatement(sql);
-                ps.setString(1, nombre);
-                ps.setString(2, email);
-                ps.setInt(3, codeRole);
-                ps.setObject(4, codeDept);
-                ps.setInt(5, id);
+                String sql;
+                PreparedStatement ps;
+                if (nuevaContrasena != null && !nuevaContrasena.isBlank()) {
+                    sql = "UPDATE `user` SET Name=?, Email=?, Code_role=?, Code_dept=?, `Password`=? WHERE Id_user=?";
+                    ps = con.prepareStatement(sql);
+                    ps.setString(1, nombre);
+                    ps.setString(2, email);
+                    ps.setInt(3, codeRole);
+                    ps.setObject(4, codeDept);
+                    ps.setString(5, PasswordUtil.hash(nuevaContrasena));
+                    ps.setInt(6, id);
+                } else {
+                    sql = "UPDATE `user` SET Name=?, Email=?, Code_role=?, Code_dept=? WHERE Id_user=?";
+                    ps = con.prepareStatement(sql);
+                    ps.setString(1, nombre);
+                    ps.setString(2, email);
+                    ps.setInt(3, codeRole);
+                    ps.setObject(4, codeDept);
+                    ps.setInt(5, id);
+                }
                 ps.executeUpdate();
                 out.print("{\"ok\":true}");
             }

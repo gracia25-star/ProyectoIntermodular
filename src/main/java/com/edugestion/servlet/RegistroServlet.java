@@ -1,6 +1,7 @@
 package com.edugestion.servlet;
 
 import com.edugestion.util.ConexionBD;
+import com.edugestion.util.PasswordUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -65,7 +66,7 @@ public class RegistroServlet extends HttpServlet {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, nombre);
             ps.setString(2, gmail);
-            ps.setString(3, contrasena);
+            ps.setString(3, PasswordUtil.hash(contrasena));
             ps.setObject(4, codeDept);
             ps.setInt(5, codeRole);
             ps.executeUpdate();

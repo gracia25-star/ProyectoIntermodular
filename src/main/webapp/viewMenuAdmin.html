@@ -16,10 +16,12 @@
             visibility: hidden
         }
     </style>
+    <script src="js/userInfo.js"></script>
     <script>
         fetch('SesionServlet').then(r => r.json()).then(d => {
             if (d.role === 'dept_manager') window.location.replace('viewMenu.html');
             else {
+                initUserInfo(d);
                 document.body.style.visibility = 'visible';
                 if (d.role === 'admin') {
                     document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
@@ -51,8 +53,8 @@
             </div>
             <div class="user-dropdown">
                 <div class="user-dropdown-header">
-                    <div class="user-name">Usuario Admin</div>
-                    <div class="user-role">Administrador</div>
+                    <div class="user-name" id="user-name">Usuario</div>
+                    <div class="user-role" id="user-role">Cargando...</div>
                 </div>
                 <a href="LogoutServlet" class="logout-btn">
                     <span>Cerrar Sesión</span>

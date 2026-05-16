@@ -13,11 +13,7 @@ fetch('SesionServlet')
     .then(r => r.json())
     .then(d => {
         userRole = d.role;
-        const nombreEl = document.getElementById('userName');
-        const rolEl    = document.getElementById('userRole');
-        if (nombreEl) nombreEl.textContent = d.nombre || 'Usuario';
-        if (rolEl)    rolEl.textContent    = labelRol(userRole);
-
+        if (window.initUserInfo) initUserInfo(d);
         ajustarNav();
         initSegunRol();
     })
@@ -25,13 +21,6 @@ fetch('SesionServlet')
         document.body.style.visibility = 'visible';
         document.getElementById('seccion-jefe').style.display = 'block';
     });
-
-function labelRol(role) {
-    if (role === 'admin')        return 'Administrador';
-    if (role === 'accountant')   return 'Contable';
-    if (role === 'dept_manager') return 'Jefe de Departamento';
-    return role || 'Usuario';
-}
 
 // ── Ajustar enlaces del nav según rol ───────────────────────
 function ajustarNav() {

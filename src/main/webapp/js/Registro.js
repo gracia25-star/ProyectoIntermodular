@@ -108,6 +108,7 @@ function editarUsuario(id) {
     if (u.codeRole === 1) select.value = 'admin';
     else if (u.codeRole === 2) select.value = 'accountant';
     else if (u.codeRole === 3 && u.codeDept !== null) select.value = String(u.codeDept);
+    document.getElementById('edit-password').value = '';
     document.getElementById('modal-editar').style.display = 'flex';
 }
 
@@ -126,7 +127,9 @@ async function guardarEdicion() {
         return;
     }
 
+    const nuevaPass = document.getElementById('edit-password').value;
     const params = new URLSearchParams({ id, nombre, email, rol });
+    if (nuevaPass) params.append('nueva_contrasena', nuevaPass);
     try {
         const res = await fetch('UsuariosServlet', {
             method: 'POST',
