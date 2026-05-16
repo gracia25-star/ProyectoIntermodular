@@ -9,12 +9,16 @@
     <link rel="stylesheet" href="css/Registro.css">
     <link rel="stylesheet" href="css/Menu.css">
     <link rel="stylesheet" href="css/Ordenes.css">
-    <style>body{visibility:hidden}</style>
+    <style>
+        body {
+            visibility: hidden
+        }
+    </style>
     <script>
-        fetch('SesionServlet').then(r=>r.json()).then(d=>{
-            if(d.role==='admin'||d.role==='accountant') window.location.replace('viewOrdenesAdmin.html');
-            else document.body.style.visibility='visible';
-        }).catch(()=>{document.body.style.visibility='visible'});
+        fetch('SesionServlet').then(r => r.json()).then(d => {
+            if (d.role === 'admin' || d.role === 'accountant') window.location.replace('viewOrdenesAdmin.html');
+            else document.body.style.visibility = 'visible';
+        }).catch(() => { document.body.style.visibility = 'visible' });
     </script>
 </head>
 
@@ -39,7 +43,7 @@
                     <div class="user-name">Usuario Gestor</div>
                     <div class="user-role">Jefe de Departamento</div>
                 </div>
-                <a href="viewRegistro.html" class="logout-btn">
+                <a href="LogoutServlet" class="logout-btn">
                     <span>Cerrar Sesión</span>
                 </a>
             </div>
@@ -49,7 +53,7 @@
     <!-- Barra de navegación secundaria -->
     <nav class="top-nav">
         <a href="viewMenu.html" class="top-nav-btn">Menú</a>
-        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes</a>
+        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de compra</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
     </nav>
@@ -69,9 +73,8 @@
                             Cód. Plan Inversión
                             <span class="campo-opcional">(opcional)</span>
                         </label>
-                        <input type="text" id="orden-codigo" name="codigo"
-                               maxlength="7" placeholder="7 dígitos"
-                               inputmode="numeric" class="input-codigo-form">
+                        <input type="text" id="orden-codigo" name="codigo" maxlength="7" placeholder="7 dígitos"
+                            inputmode="numeric" class="input-codigo-form">
                     </div>
                     <div class="input-group flex-2">
                         <label for="orden-proveedor">Proveedor</label>
@@ -95,7 +98,8 @@
                 <div class="form-row">
                     <div class="input-group flex-2">
                         <label for="orden-descripcion">Descripción</label>
-                        <input type="text" id="orden-descripcion" name="descripcion" placeholder="Descripción del pedido…">
+                        <input type="text" id="orden-descripcion" name="descripcion"
+                            placeholder="Descripción del pedido…">
                     </div>
                     <div class="input-group">
                         <label for="orden-pdf">Adjuntar factura (PDF)</label>
@@ -139,7 +143,9 @@
                         </tr>
                     </thead>
                     <tbody id="ordenes-tbody">
-                        <tr><td colspan="7" style="text-align:center;color:#aaa;padding:24px;">Cargando…</td></tr>
+                        <tr>
+                            <td colspan="7" style="text-align:center;color:#aaa;padding:24px;">Cargando…</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -238,7 +244,7 @@
                 <div style="margin-top:10px;">
                     <label class="file-label" for="edit-pdf-input">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round" class="file-icon">
+                            stroke-linecap="round" stroke-linejoin="round" class="file-icon">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="17 8 12 3 7 8"></polyline>
                             <line x1="12" y1="3" x2="12" y2="15"></line>

@@ -35,6 +35,9 @@ function labelRol(role) {
 
 // ── Ajustar enlaces del nav según rol ───────────────────────
 function ajustarNav() {
+    if (userRole === 'admin') {
+        document.querySelectorAll('.admin-only').forEach(el => el.style.display='inline-block');
+    }
     if (userRole === 'admin' || userRole === 'accountant') {
         const m = document.getElementById('nav-menu');
         const o = document.getElementById('nav-ordenes');

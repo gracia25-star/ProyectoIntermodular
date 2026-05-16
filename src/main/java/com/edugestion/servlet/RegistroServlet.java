@@ -27,7 +27,7 @@ public class RegistroServlet extends HttpServlet {
         String rolParam  = request.getParameter("rol");
 
         if (rolParam == null || rolParam.isBlank()) {
-            response.sendRedirect("viewRegistro.html?error=rol_requerido");
+            response.sendRedirect("viewAdminUsuarios.html?error=rol_requerido");
             return;
         }
 
@@ -44,7 +44,7 @@ public class RegistroServlet extends HttpServlet {
             try {
                 codeDept = Integer.parseInt(rolParam);
             } catch (NumberFormatException e) {
-                response.sendRedirect("viewRegistro.html?error=rol_invalido");
+                response.sendRedirect("viewAdminUsuarios.html?error=rol_invalido");
                 return;
             }
             codeRole = 3;
@@ -57,7 +57,7 @@ public class RegistroServlet extends HttpServlet {
             ResultSet rs = checkPs.executeQuery();
 
             if (rs.next()) {
-                response.sendRedirect("viewRegistro.html?error=email_existe");
+                response.sendRedirect("viewAdminUsuarios.html?error=email_existe");
                 return;
             }
 
@@ -70,11 +70,11 @@ public class RegistroServlet extends HttpServlet {
             ps.setInt(5, codeRole);
             ps.executeUpdate();
 
-            response.sendRedirect("viewRegistro.html?registro=ok");
+            response.sendRedirect("viewAdminUsuarios.html?registro=ok");
 
         } catch (SQLException e) {
             e.printStackTrace();
-            response.sendRedirect("viewRegistro.html?error=servidor");
+            response.sendRedirect("viewAdminUsuarios.html?error=servidor");
         }
     }
 }

@@ -32,7 +32,7 @@
                     <div class="user-name">Usuario</div>
                     <div class="user-role" id="rolUsuario">Rol</div>
                 </div>
-                <a href="viewRegistro.html" class="logout-btn">Cerrar Sesión</a>
+                <a href="LogoutServlet" class="logout-btn">Cerrar Sesión</a>
             </div>
         </div>
     </div>
@@ -41,9 +41,10 @@
     <nav class="top-nav">
         <a href="viewMenu.html" class="top-nav-btn">Menú</a>
         <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
-        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes</a>
+        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de compra</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
+        <a href="viewAdminUsuarios.html" class="top-nav-btn admin-only" style="display:none;">Registro de usuarios</a>
     </nav>
 
     <div class="menu-container">
@@ -89,7 +90,9 @@
                         </tr>
                     </thead>
                     <tbody id="tabla-presupuestos">
-                        <tr><td colspan="4" class="tabla-vacia">Cargando...</td></tr>
+                        <tr>
+                            <td colspan="4" class="tabla-vacia">Cargando...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -109,7 +112,9 @@
                         </tr>
                     </thead>
                     <tbody id="tabla-planes">
-                        <tr><td colspan="4" class="tabla-vacia">Cargando...</td></tr>
+                        <tr>
+                            <td colspan="4" class="tabla-vacia">Cargando...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -131,7 +136,9 @@
                         </tr>
                     </thead>
                     <tbody id="tabla-ordenes">
-                        <tr><td colspan="6" class="tabla-vacia">Cargando...</td></tr>
+                        <tr>
+                            <td colspan="6" class="tabla-vacia">Cargando...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -142,4 +149,5 @@
     <script src="js/Historico.js"></script>
 
 </body>
+
 </html>

@@ -10,18 +10,24 @@
     <link rel="stylesheet" href="css/Menu.css">
     <link rel="stylesheet" href="css/Ordenes.css">
     <link rel="stylesheet" href="css/OrdenesAdmin.css">
-    <style>body{visibility:hidden}</style>
+    <style>
+        body {
+            visibility: hidden
+        }
+    </style>
     <script>
-        fetch('SesionServlet').then(r=>r.json()).then(d=>{
-            if(d.role==='dept_manager') window.location.replace('viewOrdenes.html');
+        fetch('SesionServlet').then(r => r.json()).then(d => {
+            if (d.role === 'dept_manager') window.location.replace('viewOrdenes.html');
             else {
-                document.body.style.visibility='visible';
-                if(d.role !== 'admin') {
+                document.body.style.visibility = 'visible';
+                if (d.role === 'admin') {
+                    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+                } else {
                     const presLink = document.querySelector('a[href="viewPresupuesto.html"]');
-                    if(presLink) presLink.remove();
+                    if (presLink) presLink.remove();
                 }
             }
-        }).catch(()=>{document.body.style.visibility='visible'});
+        }).catch(() => { document.body.style.visibility = 'visible' });
     </script>
 </head>
 
@@ -46,7 +52,7 @@
                     <div class="user-name">Usuario Admin</div>
                     <div class="user-role">Administrador</div>
                 </div>
-                <a href="viewRegistro.html" class="logout-btn">
+                <a href="LogoutServlet" class="logout-btn">
                     <span>Cerrar Sesión</span>
                 </a>
             </div>
@@ -57,9 +63,10 @@
     <nav class="top-nav">
         <a href="viewMenuAdmin.html" class="top-nav-btn">Menú</a>
         <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
-        <a href="viewOrdenesAdmin.html" class="top-nav-btn">Órdenes</a>
+        <a href="viewOrdenesAdmin.html" class="top-nav-btn">Órdenes de compra</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
+        <a href="viewAdminUsuarios.html" class="top-nav-btn admin-only" style="display:none;">Registro de usuarios</a>
     </nav>
 
     <div class="menu-container">
@@ -88,16 +95,30 @@
                             <th>Proveedor</th>
                             <th>Importe</th>
                             <th>Estado</th>
+                            <th>Facturas</th>
                             <th>Notas</th>
                         </tr>
                     </thead>
                     <tbody id="ordenes-admin-tbody">
-                        <tr><td colspan="7" class="tabla-vacia-admin">Cargando órdenes...</td></tr>
+                        <tr>
+                            <td colspan="8" class="tabla-vacia-admin">Cargando órdenes...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
+    </div>
+
+    <!-- Popup de Facturas (Admin/Contable) -->
+    <div id="facturas-overlay" class="modal-overlay" onclick="if(event.target===this)cerrarFacturasAdmin()">
+        <div class="modal-popup">
+            <button class="modal-close" onclick="cerrarFacturasAdmin()">&#10005;</button>
+            <h3 class="modal-titulo">Facturas &middot; <span id="facturas-ref" class="modal-ref"></span></h3>
+            <ul id="facturas-admin-lista" class="facturas-lista">
+                <li class="facturas-empty">Cargando...</li>
+            </ul>
+        </div>
     </div>
 
     <!-- Modal de Notas (Admin) -->
@@ -115,7 +136,8 @@
             <!-- Observaciones del admin (editable) -->
             <div class="modal-seccion">
                 <label class="modal-label">Observaciones del administrador</label>
-                <textarea id="modal-obs" class="modal-textarea" placeholder="Escribe aquí tus observaciones…" rows="3"></textarea>
+                <textarea id="modal-obs" class="modal-textarea" placeholder="Escribe aquí tus observaciones…"
+                    rows="3"></textarea>
             </div>
 
             <div class="modal-footer">

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de usuarios - Edu-Gestión</title>
+    <link rel="icon" href="img/logo-salesianos2.png" type="image/png">
+    <link rel="stylesheet" href="css/Registro.css">
+    <link rel="stylesheet" href="css/Menu.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="divTitle">
+        <img src="img/SalesianosBaner.jpg" alt="Logo">
+        <div>
+            <h1 class="main-title">Edu-Gestión</h1>
+        </div>
+
+        <div class="user-menu">
+            <div class="user-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div class="user-dropdown">
+                <div class="user-dropdown-header">
+                    <div class="user-name">Usuario</div>
+                    <div class="user-role" id="rolUsuario">Administrador</div>
+                </div>
+                <a href="LogoutServlet" class="logout-btn">Cerrar Sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="top-nav">
+        <a href="viewMenu.html" class="top-nav-btn">Menú</a>
+        <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
+        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de compra</a>
+        <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
+        <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
+        <a href="viewAdminUsuarios.html" class="top-nav-btn active admin-only" id="navAdminUsuarios" style="display:none;">Registro de usuarios</a>
+    </nav>
+
+    <div class="menu-container">
+
+        <!-- CREAR USUARIO -->
+        <div class="chart-card" style="margin-bottom: 2rem;">
+            <h2 class="chart-title">Registrar Nuevo Usuario</h2>
+
+            <div class="form-section" style="padding: 1.5rem;" id="register-form-section">
+                <!-- El formulario ahora enviará los datos mediante POST al Servlet (ej: RegistroServlet) -->
+                <form action="RegistroServlet" method="POST">
+                    <div class="input-group">
+                        <label for="reg-name">Nombre</label>
+                        <input type="text" id="reg-name" name="nombre" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" name="gmail" placeholder="ejemplo@gmail.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" name="contrasena" placeholder="Crea una contraseña" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-rol">Rol / Departamento</label>
+                        <select id="reg-rol" name="rol" required>
+                            <option value="" disabled selected>Selecciona rol o departamento…</option>
+                            <optgroup label="Roles de gestión">
+                                <option value="admin">Administrador</option>
+                                <option value="accountant">Contable</option>
+                            </optgroup>
+                            <optgroup label="Jefe de Departamento" id="dept-optgroup">
+                                <option value="" disabled>Cargando departamentos…</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <button type="submit" class="submit-btn" style="width: auto; padding: 0.8rem 2rem;">Crear Cuenta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- TABLA DE USUARIOS -->
+        <div class="chart-card">
+            <h2 class="chart-title">Usuarios Registrados</h2>
+
+            <div style="padding:1.5rem; overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; text-align: left;" id="tabla-usuarios">
+                    <thead>
+                        <tr>
+                            <th style="padding: 0.5rem; border-bottom: 1px solid #ccc;">Nombre</th>
+                            <th style="padding: 0.5rem; border-bottom: 1px solid #ccc;">Email</th>
+                            <th style="padding: 0.5rem; border-bottom: 1px solid #ccc;">Departamento</th>
+                            <th style="padding: 0.5rem; border-bottom: 1px solid #ccc;">Rol</th>
+                            <th style="padding: 0.5rem; border-bottom: 1px solid #ccc;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-usuarios">
+                        <tr><td colspan="5" style="text-align: center; padding: 1rem; color: #777;">Cargando usuarios...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL EDITAR USUARIO -->
+    <div id="modal-editar" onclick="if(event.target===this) cerrarModalEditar()"
+         style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+                background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+        <div style="background:#fff; border-radius:12px; padding:2rem; width:90%; max-width:480px;
+                    box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+            <h2 style="margin-bottom:1.5rem; color:#1a1a2e; font-size:1.4rem;">Editar Usuario</h2>
+            <input type="hidden" id="edit-id">
+            <div class="input-group">
+                <label for="edit-nombre">Nombre</label>
+                <input type="text" id="edit-nombre" placeholder="Nombre del usuario">
+            </div>
+            <div class="input-group">
+                <label for="edit-email">Email</label>
+                <input type="email" id="edit-email" placeholder="Email del usuario">
+            </div>
+            <div class="input-group">
+                <label for="edit-rol">Rol / Departamento</label>
+                <select id="edit-rol">
+                    <option value="" disabled>Selecciona rol o departamento…</option>
+                    <optgroup label="Roles de gestión">
+                        <option value="admin">Administrador</option>
+                        <option value="accountant">Contable</option>
+                    </optgroup>
+                    <optgroup label="Jefe de Departamento" id="edit-dept-optgroup">
+                        <option value="" disabled>Cargando departamentos…</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div style="margin-top:1.5rem; display:flex; gap:1rem;">
+                <button class="submit-btn" style="padding:0.8rem 2rem;" onclick="guardarEdicion()">Guardar</button>
+                <button class="submit-btn" style="padding:0.8rem 2rem; background:#6c757d;" onclick="cerrarModalEditar()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        fetch('SesionServlet').then(r=>r.json()).then(d=>{
+            if(d.role !== 'admin') {
+                alert("No tienes permiso para acceder a esta página.");
+                window.location.replace('viewMenu.html');
+            } else {
+                document.getElementById("navAdminUsuarios").style.display = "inline-block";
+                document.getElementById("rolUsuario").innerText = d.nombre || "Administrador";
+            }
+        }).catch(()=>{
+            window.location.replace('viewMenu.html');
+        });
+    </script>
+    <script src="js/Registro.js?v=3"></script>
+</body>
+</html>

@@ -48,6 +48,7 @@ public class AdminOrderServlet extends HttpServlet {
             BudgetDAO        budgetDao   = new BudgetDAO();
             DepartmentDAO    deptDao     = new DepartmentDAO();
             SupplierDAO      supplierDao = new SupplierDAO();
+            InvoiceDAO       invoiceDao  = new InvoiceDAO();
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
             // Precargar mapas para evitar N+1
@@ -88,7 +89,8 @@ public class AdminOrderServlet extends HttpServlet {
                         ? supplierNames.getOrDefault(o.getIdSupplier(), "—")
                         : "—";
 
-                String dateStr = o.getDate() != null ? sdf.format(o.getDate()) : "";
+                String dateStr    = o.getDate() != null ? sdf.format(o.getDate()) : "";
+                int invoiceCount = invoiceDao.countByOrder(o.getCodeOrder());
 
                 json.append("{")
                     .append("\"codeOrder\":").append(o.getCodeOrder()).append(",")
@@ -99,7 +101,8 @@ public class AdminOrderServlet extends HttpServlet {
                     .append("\"amount\":").append(o.getAmount()).append(",")
                     .append("\"status\":\"").append(esc(o.getStatus())).append("\",")
                     .append("\"description\":\"").append(esc(nvl(o.getDescription()))).append("\",")
-                    .append("\"comment\":\"").append(esc(nvl(o.getComment()))).append("\"")
+                    .append("\"comment\":\"").append(esc(nvl(o.getComment()))).append("\",")
+                    .append("\"invoiceCount\":").append(invoiceCount)
                     .append("}");
             }
             json.append("]");

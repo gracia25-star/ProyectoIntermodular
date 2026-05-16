@@ -10,7 +10,11 @@
     <link rel="stylesheet" href="css/Menu.css">
     <link rel="stylesheet" href="css/Ordenes.css">
     <link rel="stylesheet" href="css/Proveedores.css">
-    <style>body{visibility:hidden}</style>
+    <style>
+        body {
+            visibility: hidden
+        }
+    </style>
 </head>
 
 <body>
@@ -33,18 +37,19 @@
                     <div class="user-name" id="userName">Usuario</div>
                     <div class="user-role" id="userRole">Rol</div>
                 </div>
-                <a href="viewRegistro.html" class="logout-btn">Cerrar Sesión</a>
+                <a href="LogoutServlet" class="logout-btn">Cerrar Sesión</a>
             </div>
         </div>
     </div>
 
     <!-- NAV (los links se ajustan por JS según rol) -->
     <nav class="top-nav">
-        <a href="viewMenu.html"        class="top-nav-btn" id="nav-menu">Menú</a>
+        <a href="viewMenu.html" class="top-nav-btn" id="nav-menu">Menú</a>
         <a href="viewPresupuesto.html" class="top-nav-btn" id="nav-presupuesto">Presupuestos</a>
-        <a href="viewOrdenes.html"     class="top-nav-btn" id="nav-ordenes">Órdenes</a>
-        <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
-        <a href="viewHistorico.html"   class="top-nav-btn">Histórico</a>
+        <a href="viewOrdenes.html" class="top-nav-btn" id="nav-ordenes">Órdenes de compra</a>
+        <a href="viewProveedores.html" class="top-nav-btn active">Proveedores</a>
+        <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
+        <a href="viewAdminUsuarios.html" class="top-nav-btn admin-only" style="display:none;">Registro de usuarios</a>
     </nav>
 
     <div class="menu-container">
@@ -74,7 +79,8 @@
                         <form id="form-proveedor">
                             <div class="form-row">
                                 <div class="input-group flex-2">
-                                    <label for="prov-nombre">Razón Social <span class="campo-obligatorio">*</span></label>
+                                    <label for="prov-nombre">Razón Social <span
+                                            class="campo-obligatorio">*</span></label>
                                     <input type="text" id="prov-nombre" placeholder="Nombre de la empresa" required>
                                 </div>
                                 <div class="input-group">
@@ -98,7 +104,8 @@
                                     <input type="text" id="prov-direccion" placeholder="Dirección del proveedor">
                                 </div>
                                 <div class="input-group">
-                                    <label for="prov-departamento">Departamento <span class="campo-obligatorio">*</span></label>
+                                    <label for="prov-departamento">Departamento <span
+                                            class="campo-obligatorio">*</span></label>
                                     <select id="prov-departamento" class="input-select" required>
                                         <option value="" disabled selected>Selecciona…</option>
                                     </select>
@@ -119,13 +126,13 @@
                 <section class="chart-card filtro-prov-card">
                     <div class="filtro-prov-row">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                             style="width:16px;height:16px;flex-shrink:0;">
+                            style="width:16px;height:16px;flex-shrink:0;">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
                         <label class="filtro-prov-label" for="admin-filtro-dept">Departamento</label>
                         <select id="admin-filtro-dept" class="input-select filtro-prov-select"
-                                onchange="adminFiltrarDept()">
+                            onchange="adminFiltrarDept()">
                             <option value="">Todos los departamentos</option>
                         </select>
                     </div>
@@ -157,7 +164,9 @@
                                 </tr>
                             </thead>
                             <tbody id="tbody-admin-prov">
-                                <tr><td colspan="7" class="tabla-vacia">Cargando…</td></tr>
+                                <tr>
+                                    <td colspan="7" class="tabla-vacia">Cargando…</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -175,13 +184,12 @@
             <section class="chart-card filtro-prov-card">
                 <div class="filtro-prov-row">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                         style="width:16px;height:16px;flex-shrink:0;">
+                        style="width:16px;height:16px;flex-shrink:0;">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                     <label class="filtro-prov-label" for="cont-filtro-dept">Departamento</label>
-                    <select id="cont-filtro-dept" class="input-select filtro-prov-select"
-                            onchange="contFiltrarDept()">
+                    <select id="cont-filtro-dept" class="input-select filtro-prov-select" onchange="contFiltrarDept()">
                         <option value="">Todos los departamentos</option>
                     </select>
                 </div>
@@ -208,7 +216,9 @@
                             </tr>
                         </thead>
                         <tbody id="tbody-cont-prov">
-                            <tr><td colspan="5" class="tabla-vacia">Cargando…</td></tr>
+                            <tr>
+                                <td colspan="5" class="tabla-vacia">Cargando…</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -243,7 +253,9 @@
                             </tr>
                         </thead>
                         <tbody id="tbody-jefe-prov">
-                            <tr><td colspan="5" class="tabla-vacia">Cargando…</td></tr>
+                            <tr>
+                                <td colspan="5" class="tabla-vacia">Cargando…</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -255,4 +267,5 @@
 
     <script src="js/Proveedores.js"></script>
 </body>
+
 </html>

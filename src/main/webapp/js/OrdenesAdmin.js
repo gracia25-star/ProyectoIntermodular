@@ -5,6 +5,15 @@ let _deptActual = 0;
 // Mapa codeOrder → datos completos de la orden (evita poner texto en atributos HTML)
 const ordenesMapa = {};
 
+const svgPdf = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="flex-shrink:0">
+     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+     <polyline points="14 2 14 8 20 8"/>
+     <line x1="16" y1="13" x2="8" y2="13"/>
+     <line x1="16" y1="17" x2="8" y2="17"/>
+     <line x1="10" y1="9" x2="8" y2="9"/>
+</svg>`;
+
 // ── Al cargar: poblar departamentos y cargar órdenes ──────────
 document.addEventListener('DOMContentLoaded', () => {
     poblarDepartamentos();
@@ -57,7 +66,7 @@ function filtrarDepto() {
 // ── Cargar órdenes desde el servidor ─────────────────────────
 async function cargarOrdenes(deptCode) {
     const tbody = document.getElementById('ordenes-admin-tbody');
-    tbody.innerHTML = '<tr><td colspan="7" class="tabla-vacia-admin">Cargando...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="tabla-vacia-admin">Cargando...</td></tr>';
 
     try {
         const url = deptCode > 0 ? `AdminOrderServlet?dept=${deptCode}` : 'AdminOrderServlet';
@@ -70,7 +79,7 @@ async function cargarOrdenes(deptCode) {
         ordenes.forEach(o => { ordenesMapa[o.codeOrder] = o; });
 
         if (!ordenes.length) {
-            tbody.innerHTML = '<tr><td colspan="7" class="tabla-vacia-admin">No hay órdenes para este departamento</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" class="tabla-vacia-admin">No hay órdenes para este departamento</td></tr>';
             document.getElementById('filtro-total').textContent = '0 órdenes';
             return;
         }
@@ -81,7 +90,7 @@ async function cargarOrdenes(deptCode) {
 
     } catch (err) {
         console.error('Error cargando órdenes:', err);
-        tbody.innerHTML = `<tr><td colspan="7" class="tabla-vacia-admin">Error: ${err.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="tabla-vacia-admin">Error: ${err.message}</td></tr>`;
     }
 }
 
@@ -94,7 +103,14 @@ function claseEstado(status) {
 
 // ── Construir fila HTML — datos complejos NO van en atributos ─
 function buildFila(o) {
-    const tieneNota = o.comment && o.comment.trim().length > 0;
+    const tieneNota   = o.comment && o.comment.trim().length > 0;
+    const invCount    = o.invoiceCount || 0;
+    const facturaCell = invCount > 0
+        ? `<button class="inv-badge-btn" onclick="verFacturasAdmin(${o.codeOrder})"
+                   title="Ver ${invCount} factura${invCount > 1 ? 's' : ''}">
+               ${svgPdf} ${invCount}
+           </button>`
+        : '<span class="no-pdf">—</span>';
 
     return `
         <tr>
@@ -112,10 +128,11 @@ function buildFila(o) {
                     <option value="rejected" ${o.status === 'rejected' ? 'selected' : ''}>Rechazada</option>
                 </select>
             </td>
+            <td>${facturaCell}</td>
             <td>
                 <button class="notas-btn ${tieneNota ? 'has-nota' : ''}"
                         onclick="abrirNotasAdmin(this)"
-                        data-code-order="${o.codeOrder}">💬</button>
+                        data-code-order="${o.codeOrder}">&#128172;</button>
             </td>
         </tr>`;
 }
@@ -191,6 +208,43 @@ async function guardarObservaciones() {
     }
 }
 
+// ── Ver facturas de una orden (popup solo lectura) ────────────
+async function verFacturasAdmin(codeOrder) {
+    const o = ordenesMapa[codeOrder] || {};
+    document.getElementById('facturas-ref').textContent = o.orderReference || '';
+    const lista = document.getElementById('facturas-admin-lista');
+    lista.innerHTML = '<li class="facturas-empty">Cargando...</li>';
+    document.getElementById('facturas-overlay').classList.add('visible');
+
+    try {
+        const res = await fetch(`InvoiceServlet?order=${codeOrder}`);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const invoices = await res.json();
+
+        if (!invoices.length) {
+            lista.innerHTML = '<li class="facturas-empty">Sin facturas adjuntas.</li>';
+            return;
+        }
+        lista.innerHTML = invoices.map((inv, i) => `
+            <li class="facturas-item">
+                <a href="InvoiceServlet?invoice=${inv.codeInvoice}" target="_blank" class="pdf-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>Factura ${i + 1}
+                </a>
+                <span class="facturas-date">${inv.date}</span>
+            </li>`).join('');
+    } catch {
+        lista.innerHTML = '<li class="facturas-empty" style="color:#c70303;">Error al cargar las facturas.</li>';
+    }
+}
+
+function cerrarFacturasAdmin() {
+    document.getElementById('facturas-overlay').classList.remove('visible');
+}
+
 // ── Cerrar modal ──────────────────────────────────────────────
 function cerrarModalAdmin(event) {
     if (event.target === document.getElementById('modal-overlay')) _cerrarModal();
@@ -200,7 +254,12 @@ function _cerrarModal() {
     document.getElementById('modal-overlay').classList.remove('visible');
     _btnActivo = null;
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') _cerrarModal(); });
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        _cerrarModal();
+        cerrarFacturasAdmin();
+    }
+});
 
 // ── Utilidades ────────────────────────────────────────────────
 function formatEuros(valor) {

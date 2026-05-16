@@ -25,6 +25,9 @@ fetch('SesionServlet')
             const ordenesLink = document.querySelector('a[href="viewOrdenes.html"]');
             if (ordenesLink) ordenesLink.href = 'viewOrdenesAdmin.html';
         }
+        if (userRole === 'admin') {
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display='inline-block');
+        }
         inicializar();
     })
     .catch(() => inicializar());

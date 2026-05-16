@@ -10,12 +10,16 @@
     <link rel="stylesheet" href="css/Menu.css">
     <!-- Chart.js para las gráficas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>body{visibility:hidden}</style>
+    <style>
+        body {
+            visibility: hidden
+        }
+    </style>
     <script>
-        fetch('SesionServlet').then(r=>r.json()).then(d=>{
-            if(d.role==='admin'||d.role==='accountant') window.location.replace('viewMenuAdmin.html');
-            else document.body.style.visibility='visible';
-        }).catch(()=>{document.body.style.visibility='visible'});
+        fetch('SesionServlet').then(r => r.json()).then(d => {
+            if (d.role === 'admin' || d.role === 'accountant') window.location.replace('viewMenuAdmin.html');
+            else document.body.style.visibility = 'visible';
+        }).catch(() => { document.body.style.visibility = 'visible' });
     </script>
 </head>
 
@@ -41,21 +45,19 @@
                     <div class="user-name">Usuario Gestor</div>
                     <div class="user-role">Administrador</div>
                 </div>
-                <a href="viewRegistro.html" class="logout-btn">
+                <a href="LogoutServlet" class="logout-btn">
                     <span>Cerrar Sesión</span>
-
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Barra de navegación secundaria (ancho completo) -->
     <nav class="top-nav">
-       <a href="viewMenu.html" class="top-nav-btn">Menú</a>
-        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes</a>
+        <a href="viewMenu.html" class="top-nav-btn">Menú</a>
+        <a href="viewOrdenes.html" class="top-nav-btn">Órdenes de compra</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
-
+        <a href="viewAdminUsuarios.html" class="top-nav-btn admin-only" style="display:none;">Registro de usuarios</a>
     </nav>
 
     <div class="menu-container">

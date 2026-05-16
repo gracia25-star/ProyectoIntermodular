@@ -11,18 +11,24 @@
     <link rel="stylesheet" href="css/MenuAdmin.css">
     <!-- Chart.js para las gráficas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>body{visibility:hidden}</style>
+    <style>
+        body {
+            visibility: hidden
+        }
+    </style>
     <script>
-        fetch('SesionServlet').then(r=>r.json()).then(d=>{
-            if(d.role==='dept_manager') window.location.replace('viewMenu.html');
+        fetch('SesionServlet').then(r => r.json()).then(d => {
+            if (d.role === 'dept_manager') window.location.replace('viewMenu.html');
             else {
-                document.body.style.visibility='visible';
-                if(d.role !== 'admin') {
+                document.body.style.visibility = 'visible';
+                if (d.role === 'admin') {
+                    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+                } else {
                     const presLink = document.querySelector('a[href="viewPresupuesto.html"]');
-                    if(presLink) presLink.remove();
+                    if (presLink) presLink.remove();
                 }
             }
-        }).catch(()=>{document.body.style.visibility='visible'});
+        }).catch(() => { document.body.style.visibility = 'visible' });
     </script>
 </head>
 
@@ -48,7 +54,7 @@
                     <div class="user-name">Usuario Admin</div>
                     <div class="user-role">Administrador</div>
                 </div>
-                <a href="viewRegistro.html" class="logout-btn">
+                <a href="LogoutServlet" class="logout-btn">
                     <span>Cerrar Sesión</span>
                 </a>
             </div>
@@ -59,9 +65,10 @@
     <nav class="top-nav">
         <a href="viewMenuAdmin.html" class="top-nav-btn">Menú</a>
         <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
-        <a href="viewOrdenesAdmin.html" class="top-nav-btn">Órdenes</a>
+        <a href="viewOrdenesAdmin.html" class="top-nav-btn">Órdenes de compra</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
         <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
+        <a href="viewAdminUsuarios.html" class="top-nav-btn admin-only" style="display:none;">Registro de usuarios</a>
     </nav>
 
     <div class="menu-container">
@@ -70,8 +77,8 @@
         <section class="chart-card filtro-card-menu">
             <div class="filtro-row-menu">
                 <label for="menu-filtro-depto" class="filtro-label-menu">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>

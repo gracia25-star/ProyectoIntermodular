@@ -379,38 +379,56 @@
     margin-left: 4px;
 }
 
-/* ── Badge de facturas en la tabla (solo lectura) ── */
-.inv-badge {
+/* ── Botón de facturas en la tabla (clickable) ── */
+.inv-badge-btn {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     font-size: 13px;
     font-weight: 600;
     color: #c70303;
+    background: rgba(199, 3, 3, 0.07);
+    border: 1px solid rgba(199, 3, 3, 0.2);
+    border-radius: 20px;
+    padding: 3px 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
 }
 
-/* ── Columna acciones (💬 + ✏️) ── */
+.inv-badge-btn:hover {
+    background: rgba(199, 3, 3, 0.14);
+    border-color: rgba(199, 3, 3, 0.4);
+}
+
+/* ── Columna acciones ── */
 .acciones-ord {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    white-space: nowrap;
 }
 
 /* ── Botón editar orden ── */
 .edit-ord-btn {
-    background: none;
-    border: none;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
     cursor: pointer;
-    padding: 3px 6px;
+    padding: 5px 14px;
     border-radius: 6px;
-    font-size: 17px;
-    color: #6b7280;
-    transition: color 0.2s ease, background 0.2s ease;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
 }
 
 .edit-ord-btn:hover {
-    color: #374151;
-    background: rgba(0, 0, 0, 0.06);
+    background: #1a1a2e;
+    border-color: #1a1a2e;
+    color: #fff;
 }
 
 /* ── Modal de editar orden ── */
