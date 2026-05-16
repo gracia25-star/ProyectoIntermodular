@@ -69,8 +69,8 @@ public class DeptSupplierServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("usuarioId") == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        if (session == null || !"admin".equals(session.getAttribute("role"))) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
 

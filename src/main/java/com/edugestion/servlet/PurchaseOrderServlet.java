@@ -49,19 +49,20 @@ public class PurchaseOrderServlet extends HttpServlet {
                     if (s != null) supplierName = s.getName();
                 }
 
-                boolean hasInvoice = !invoiceDao.findByOrder(o.getCodeOrder()).isEmpty();
+                int invoiceCount = invoiceDao.countByOrder(o.getCodeOrder());
                 String dateStr = o.getDate() != null ? sdf.format(o.getDate()) : "";
 
                 json.append("{")
                     .append("\"codeOrder\":").append(o.getCodeOrder()).append(",")
                     .append("\"orderReference\":\"").append(esc(o.getOrderReference())).append("\",")
                     .append("\"date\":\"").append(dateStr).append("\",")
+                    .append("\"idSupplier\":").append(o.getIdSupplier() != null ? o.getIdSupplier() : "null").append(",")
                     .append("\"supplierName\":\"").append(esc(supplierName)).append("\",")
                     .append("\"amount\":").append(o.getAmount()).append(",")
                     .append("\"status\":\"").append(esc(o.getStatus())).append("\",")
                     .append("\"description\":\"").append(esc(nvl(o.getDescription()))).append("\",")
                     .append("\"comment\":\"").append(esc(nvl(o.getComment()))).append("\",")
-                    .append("\"hasInvoice\":").append(hasInvoice)
+                    .append("\"invoiceCount\":").append(invoiceCount)
                     .append("}");
 
                 if (i < orders.size() - 1) json.append(",");
@@ -90,6 +91,12 @@ public class PurchaseOrderServlet extends HttpServlet {
         }
 
         int idUser = (int) session.getAttribute("usuarioId");
+
+        // Actualización de orden existente
+        if ("update".equals(request.getParameter("action"))) {
+            handleUpdate(request, response);
+            return;
+        }
 
         try {
             // Datos del usuario y su departamento
@@ -164,6 +171,36 @@ public class PurchaseOrderServlet extends HttpServlet {
                 "{\"ok\":true,\"orderReference\":\"" + esc(orderReference) + "\"}"
             );
 
+        } catch (NumberFormatException e) {
+            json(response, false, "Datos del formulario incorrectos.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            json(response, false, "Error de base de datos: " + esc(e.getMessage()));
+        }
+    }
+
+    // ── Actualizar orden (supplier, amount, description) ────
+    private void handleUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        try {
+            int codeOrder   = Integer.parseInt(request.getParameter("codeOrder"));
+            int idSupplier  = Integer.parseInt(request.getParameter("idProveedor"));
+            String importeStr = nvl(request.getParameter("importe")).replace(",", ".");
+            BigDecimal amount = new BigDecimal(importeStr);
+            String descripcion = nvl(request.getParameter("descripcion")).trim();
+
+            PurchaseOrderDAO dao = new PurchaseOrderDAO();
+            PurchaseOrder existing = dao.findById(codeOrder);
+            if (existing == null) {
+                json(response, false, "Orden no encontrada.");
+                return;
+            }
+            existing.setIdSupplier(idSupplier);
+            existing.setAmount(amount);
+            existing.setDescription(descripcion);
+            dao.updateOrder(existing);
+            response.getWriter().write("{\"ok\":true}");
         } catch (NumberFormatException e) {
             json(response, false, "Datos del formulario incorrectos.");
         } catch (SQLException e) {

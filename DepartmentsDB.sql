@@ -70,10 +70,11 @@ CREATE TABLE invoice (
 	Code_invoice INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	Date TIMESTAMP NOT NULL DEFAULT NOW(),
 	Total_amount DECIMAL (10,2) NOT NULL,
-	PDF_file BLOB,
+	PDF_file LONGBLOB,
     Code_order INT UNSIGNED,
     FOREIGN KEY (Code_order) REFERENCES purchase_order(Code_order) ON DELETE RESTRICT
 );
+ALTER TABLE invoice MODIFY PDF_file LONGBLOB;
 
 DROP TABLE IF EXISTS dept_Supplier;
 CREATE TABLE dept_Supplier(

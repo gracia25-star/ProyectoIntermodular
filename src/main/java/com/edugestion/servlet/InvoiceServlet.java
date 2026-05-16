@@ -18,8 +18,9 @@ import java.util.List;
 @MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class InvoiceServlet extends HttpServlet {
 
-    // GET ?order=X → sirve el PDF de la primera factura de esa orden
-    // GET          → lista JSON de facturas del usuario en sesión
+    // GET ?invoice=X → sirve el PDF de una factura concreta
+    // GET ?order=X   → lista JSON de facturas de esa orden (sin BLOB)
+    // GET            → lista JSON de facturas del usuario en sesión
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,26 +35,45 @@ public class InvoiceServlet extends HttpServlet {
 
         try {
             InvoiceDAO dao = new InvoiceDAO();
-            String orderParam = request.getParameter("order");
+            String invoiceParam = request.getParameter("invoice");
+            String orderParam   = request.getParameter("order");
 
-            if (orderParam != null) {
-                // Servir PDF de la factura asociada a la orden
-                List<Invoice> invoices = dao.findByOrder(Integer.parseInt(orderParam));
-                if (invoices.isEmpty() || invoices.get(0).getPdfFile() == null) {
+            if (invoiceParam != null) {
+                // Servir PDF de una factura concreta por su ID
+                Invoice inv = dao.findById(Integer.parseInt(invoiceParam));
+                if (inv == null || inv.getPdfFile() == null || inv.getPdfFile().length == 0) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND);
                     return;
                 }
-                byte[] pdf = invoices.get(0).getPdfFile();
                 response.setContentType("application/pdf");
-                response.setContentLength(pdf.length);
-                response.getOutputStream().write(pdf);
+                response.setContentLength(inv.getPdfFile().length);
+                response.getOutputStream().write(inv.getPdfFile());
+                return;
+            }
+
+            response.setContentType("application/json;charset=UTF-8");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+            if (orderParam != null) {
+                // Lista JSON de facturas de una orden (sin PDF)
+                List<Invoice> invoices = dao.findByOrderMeta(Integer.parseInt(orderParam));
+                StringBuilder json = new StringBuilder("[");
+                for (int i = 0; i < invoices.size(); i++) {
+                    Invoice inv = invoices.get(i);
+                    String dateStr = inv.getDate() != null ? sdf.format(inv.getDate()) : "";
+                    json.append("{")
+                        .append("\"codeInvoice\":").append(inv.getCodeInvoice()).append(",")
+                        .append("\"date\":\"").append(dateStr).append("\"")
+                        .append("}");
+                    if (i < invoices.size() - 1) json.append(",");
+                }
+                json.append("]");
+                response.getWriter().write(json.toString());
                 return;
             }
 
             // Sin parámetro → lista JSON de facturas del usuario
-            response.setContentType("application/json;charset=UTF-8");
             List<Invoice> invoices = dao.findByUser(idUser);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
             StringBuilder json = new StringBuilder("[");
             for (int i = 0; i < invoices.size(); i++) {

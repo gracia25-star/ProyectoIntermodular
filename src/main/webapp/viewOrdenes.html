@@ -134,53 +134,12 @@
                             <th>Proveedor</th>
                             <th>Importe</th>
                             <th>Estado</th>
-                            <th>Factura</th>
-                            <th>Notas</th>
+                            <th>Facturas</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="ordenes-tbody">
-                        <!-- Filas de ejemplo — en producción vendrán del back -->
-                        <tr>
-                            <td class="ref-cell">ORD-2025-001</td>
-                            <td>12/01/2025</td>
-                            <td>Informática del Ebro</td>
-                            <td class="importe-cell">1.250,00 €</td>
-                            <td><span class="status-badge status-green">Aprobada</span></td>
-                            <td><a href="#" class="pdf-link" title="Ver factura">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>
-                                PDF
-                            </a></td>
-                            <td><button class="notas-btn has-nota" onclick="abrirNotas(this)" data-desc="Compra de 10 licencias software educativo" data-obs="Aprobado por dirección el 15/01">💬</button></td>
-                        </tr>
-                        <tr>
-                            <td class="ref-cell">ORD-2025-002</td>
-                            <td>28/01/2025</td>
-                            <td>TechSupply España</td>
-                            <td class="importe-cell">3.800,00 €</td>
-                            <td><span class="status-badge status-orange">Pendiente</span></td>
-                            <td><span class="no-pdf">—</span></td>
-                            <td><button class="notas-btn has-nota" onclick="abrirNotas(this)" data-desc="Equipos de laboratorio para taller mecánica" data-obs="">💬</button></td>
-                        </tr>
-                        <tr>
-                            <td class="ref-cell">ORD-2025-003</td>
-                            <td>05/02/2025</td>
-                            <td>Papelería Martínez</td>
-                            <td class="importe-cell">420,50 €</td>
-                            <td><span class="status-badge status-red">Rechazada</span></td>
-                            <td><a href="#" class="pdf-link" title="Ver factura">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>
-                                PDF
-                            </a></td>
-                            <td><button class="notas-btn has-nota" onclick="abrirNotas(this)" data-desc="Material de oficina trimestre 1" data-obs="Rechazada: excede presupuesto disponible">💬</button></td>
-                        </tr>
+                        <tr><td colspan="7" style="text-align:center;color:#aaa;padding:24px;">Cargando…</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -236,6 +195,63 @@
             <div class="notas-seccion">
                 <label class="notas-label">Observaciones</label>
                 <p id="notas-obs" class="notas-texto notas-obs-vacia"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Modal: editar orden (detalles + facturas) ── -->
+    <div id="edit-overlay" class="notas-overlay" onclick="cerrarEditModal(event)">
+        <div class="notas-popup edit-popup">
+            <button class="notas-close" onclick="cerrarEditModalBtn()">✕</button>
+            <h3 class="notas-titulo" id="edit-titulo">Editar Orden</h3>
+
+            <!-- Detalles de la orden -->
+            <div class="notas-seccion">
+                <label class="notas-label">Detalles de la orden</label>
+                <div class="edit-fields">
+                    <div class="edit-field-row">
+                        <label class="edit-field-label">Proveedor</label>
+                        <select id="edit-proveedor" class="input-select"></select>
+                    </div>
+                    <div class="edit-field-row">
+                        <label class="edit-field-label">Importe (€)</label>
+                        <input type="number" id="edit-importe" min="0" step="0.01" class="edit-input">
+                    </div>
+                    <div class="edit-field-row">
+                        <label class="edit-field-label">Descripción</label>
+                        <input type="text" id="edit-descripcion" class="edit-input">
+                    </div>
+                </div>
+                <div class="form-row form-row-btn" style="margin-top:0.9rem;">
+                    <button class="submit-btn btn-auto" id="edit-btn-guardar" onclick="guardarEditOrden()">
+                        Guardar cambios
+                    </button>
+                </div>
+            </div>
+
+            <!-- Facturas de la orden -->
+            <div class="notas-seccion edit-facturas-seccion">
+                <label class="notas-label" id="edit-facturas-label">Facturas</label>
+                <ul id="edit-facturas-lista" class="facturas-lista">
+                    <li class="facturas-empty">Cargando…</li>
+                </ul>
+                <div style="margin-top:10px;">
+                    <label class="file-label" for="edit-pdf-input">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round" class="file-icon">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span id="edit-file-label">Seleccionar PDF…</span>
+                    </label>
+                    <input type="file" id="edit-pdf-input" accept=".pdf" class="file-input-hidden">
+                </div>
+                <div class="form-row form-row-btn" style="margin-top:0.9rem;">
+                    <button class="submit-btn btn-auto" id="edit-btn-factura" onclick="editSubirFactura()">
+                        + Adjuntar factura
+                    </button>
+                </div>
             </div>
         </div>
     </div>

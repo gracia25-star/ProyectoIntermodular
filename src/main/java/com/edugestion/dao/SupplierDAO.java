@@ -52,18 +52,26 @@ public class SupplierDAO {
         }
     }
 
-    // ── Crear proveedor ──────────────────────────────────────
-    public void createSupplier(Supplier supplier) throws SQLException {
+    // ── Crear proveedor (devuelve ID generado) ───────────────
+    public int insert(Supplier supplier) throws SQLException {
         String sql = "INSERT INTO supplier (Name, CIF, Address, Phone, Mail) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = ConexionBD.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, supplier.getName());
             ps.setString(2, supplier.getCif());
             ps.setString(3, supplier.getAddress());
             ps.setString(4, supplier.getPhone());
             ps.setString(5, supplier.getMail());
             ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                return rs.next() ? rs.getInt(1) : -1;
+            }
         }
+    }
+
+    // ── Crear proveedor (sin devolver ID — compatibilidad) ───
+    public void createSupplier(Supplier supplier) throws SQLException {
+        insert(supplier);
     }
 
     // ── Actualizar proveedor ─────────────────────────────────

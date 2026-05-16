@@ -8,7 +8,9 @@
     <link rel="icon" href="img/logo-salesianos2.png" type="image/png">
     <link rel="stylesheet" href="css/Registro.css">
     <link rel="stylesheet" href="css/Menu.css">
+    <link rel="stylesheet" href="css/Ordenes.css">
     <link rel="stylesheet" href="css/Proveedores.css">
+    <style>body{visibility:hidden}</style>
 </head>
 
 <body>
@@ -19,7 +21,6 @@
         <div>
             <h1 class="main-title">Proveedores</h1>
         </div>
-
         <div class="user-menu">
             <div class="user-avatar">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -29,141 +30,229 @@
             </div>
             <div class="user-dropdown">
                 <div class="user-dropdown-header">
-                    <div class="user-name">Usuario Gestor</div>
-                    <div class="user-role" id="rolUsuario">Administrador</div>
+                    <div class="user-name" id="userName">Usuario</div>
+                    <div class="user-role" id="userRole">Rol</div>
                 </div>
-                <a href="viewRegistro.html" class="logout-btn">
-                    <span>Cerrar Sesión</span>
-                </a>
+                <a href="viewRegistro.html" class="logout-btn">Cerrar Sesión</a>
             </div>
         </div>
     </div>
 
-    <!-- NAV -->
+    <!-- NAV (los links se ajustan por JS según rol) -->
     <nav class="top-nav">
-       <a href="viewMenu.html" class="top-nav-btn" id="nav-menu-link">Menú</a>
-        <a href="viewPresupuesto.html" class="top-nav-btn">Presupuestos</a>
-        <a href="viewOrdenes.html" class="top-nav-btn" id="nav-ordenes-link">Órdenes</a>
+        <a href="viewMenu.html"        class="top-nav-btn" id="nav-menu">Menú</a>
+        <a href="viewPresupuesto.html" class="top-nav-btn" id="nav-presupuesto">Presupuestos</a>
+        <a href="viewOrdenes.html"     class="top-nav-btn" id="nav-ordenes">Órdenes</a>
         <a href="viewProveedores.html" class="top-nav-btn">Proveedores</a>
-        <a href="viewHistorico.html" class="top-nav-btn">Histórico</a>
+        <a href="viewHistorico.html"   class="top-nav-btn">Histórico</a>
     </nav>
-    <script>
-        fetch('SesionServlet').then(r=>r.json()).then(d=>{
-            if(d.role !== 'admin') {
-                const presLink = document.querySelector('a[href="viewPresupuesto.html"]');
-                if(presLink) presLink.remove();
-            }
-            if(d.role === 'admin' || d.role === 'accountant') {
-                const menuLink = document.getElementById('nav-menu-link');
-                if(menuLink) menuLink.href = 'viewMenuAdmin.html';
-                const ordenesLink = document.getElementById('nav-ordenes-link');
-                if(ordenesLink) ordenesLink.href = 'viewOrdenesAdmin.html';
-            }
-        }).catch(()=>{});
-    </script>
 
     <div class="menu-container">
 
-        <!-- FORMULARIO -->
-        <div class="chart-card" style="margin-bottom: 2rem;">
-            <h2 class="chart-title">Registrar / Editar Proveedor</h2>
+        <!-- ══════════════════════════════════════════════════════
+             SECCIÓN ADMIN: tabs (Lista + Añadir Proveedor)
+        ══════════════════════════════════════════════════════ -->
+        <div id="seccion-admin" style="display:none;">
 
-            <div class="form-section" style="padding: 1.5rem;">
-                <form>
-
-                    <div class="row" style="display: flex; gap: 1rem;">
-                        <div class="input-group" style="flex: 1;">
-                            <label>Razón Social</label>
-                            <input type="text" placeholder="Nombre de la empresa" required>
-                        </div>
-
-                        <div class="input-group" style="flex: 1;">
-                            <label>CIF / NIF</label>
-                            <input type="text" placeholder="B-12345678" required>
-                        </div>
-                    </div>
-
-                    <div class="row" style="display: flex; gap: 1rem;">
-                        <div class="input-group" style="flex: 1;">
-                            <label>Email</label>
-                            <input type="email" placeholder="contacto@empresa.com" required>
-                        </div>
-
-                        <div class="input-group" style="flex: 1;">
-                            <label>Teléfono</label>
-                            <input type="tel" placeholder="+34 900 000 000" required>
-                        </div>
-                    </div>
-
-                    <!-- NUEVO CAMPO -->
-                    <div class="input-group">
-                        <label>Dirección</label>
-                        <input type="text" placeholder="Dirección del proveedor">
-                    </div>
-
-                    <button type="submit" class="submit-btn"
-                        style="width: auto; padding: 10px 30px; margin-top: 1rem;">
-                        Guardar
+            <!-- Tabs header -->
+            <div class="chart-card tabs-card">
+                <div class="tabs-bar">
+                    <button class="tab-btn active" onclick="cambiarTab('tab-lista-admin', this)">
+                        Lista de Proveedores
                     </button>
-
-                </form>
+                    <button class="tab-btn" onclick="cambiarTab('tab-agregar', this)">
+                        Añadir Proveedor
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <!-- TABLA -->
-        <div class="chart-card">
-            <h2 class="chart-title">Directorio de Proveedores</h2>
-
-            <div style="padding: 1.5rem; overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead style="border-bottom: 2px solid #eee;">
-                        <tr>
-                            <th style="padding: 10px;">Empresa</th>
-                            <th style="padding: 10px;">CIF</th>
-                            <th style="padding: 10px;">Email</th>
-                            <th style="padding: 10px;">Teléfono</th>
-                            <th style="padding: 10px;">Dirección</th>
-                            <th style="padding: 10px;">Acciones</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 10px;">Tech Solutions S.L.</td>
-                            <td style="padding: 10px;">B-98765432</td>
-                            <td style="padding: 10px;">ventas@techsol.es</td>
-                            <td style="padding: 10px;">600 123 456</td>
-                            <td style="padding: 10px;">Madrid</td>
-                            <td style="padding: 10px;">
-                                <button class="submit-btn">Editar</button>
-                                <button class="submit-btn" style="background-color:#e74c3c;"
-                                    onclick="confirmarEliminar()">Eliminar</button>
-                            </td>
-                        </tr>
-
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 10px;">Mobiliario Escolar S.A.</td>
-                            <td style="padding: 10px;">A-11223344</td>
-                            <td style="padding: 10px;">info@mobiescolar.com</td>
-                            <td style="padding: 10px;">910 987 654</td>
-                            <td style="padding: 10px;">Barcelona</td>
-                            <td style="padding: 10px;">
-                                <button class="submit-btn">Editar</button>
-                                <button class="submit-btn" style="background-color:#e74c3c;"
-                                    onclick="confirmarEliminar()">Eliminar</button>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
+            <!-- Tab: Añadir Proveedor -->
+            <div id="tab-agregar" class="tab-panel">
+                <section class="chart-card orden-form-card">
+                    <h2 class="chart-title">Nuevo Proveedor</h2>
+                    <div class="orden-form">
+                        <form id="form-proveedor">
+                            <div class="form-row">
+                                <div class="input-group flex-2">
+                                    <label for="prov-nombre">Razón Social <span class="campo-obligatorio">*</span></label>
+                                    <input type="text" id="prov-nombre" placeholder="Nombre de la empresa" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="prov-cif">CIF / NIF <span class="campo-obligatorio">*</span></label>
+                                    <input type="text" id="prov-cif" placeholder="B-12345678" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="prov-email">Email <span class="campo-obligatorio">*</span></label>
+                                    <input type="email" id="prov-email" placeholder="contacto@empresa.com" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="prov-telefono">Teléfono <span class="campo-obligatorio">*</span></label>
+                                    <input type="tel" id="prov-telefono" placeholder="+34 900 000 000" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="input-group flex-2">
+                                    <label for="prov-direccion">Dirección</label>
+                                    <input type="text" id="prov-direccion" placeholder="Dirección del proveedor">
+                                </div>
+                                <div class="input-group">
+                                    <label for="prov-departamento">Departamento <span class="campo-obligatorio">*</span></label>
+                                    <select id="prov-departamento" class="input-select" required>
+                                        <option value="" disabled selected>Selecciona…</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row form-row-btn">
+                                <button type="submit" class="submit-btn btn-auto">+ Guardar Proveedor</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
             </div>
-        </div>
 
-    </div>
+            <!-- Tab: Lista (activo por defecto) -->
+            <div id="tab-lista-admin" class="tab-panel active">
+
+                <!-- Filtro por departamento -->
+                <section class="chart-card filtro-prov-card">
+                    <div class="filtro-prov-row">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             style="width:16px;height:16px;flex-shrink:0;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <label class="filtro-prov-label" for="admin-filtro-dept">Departamento</label>
+                        <select id="admin-filtro-dept" class="input-select filtro-prov-select"
+                                onchange="adminFiltrarDept()">
+                            <option value="">Todos los departamentos</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Tabla proveedores (admin) -->
+                <section class="chart-card orden-table-card">
+                    <h2 class="chart-title">Directorio de Proveedores</h2>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <colgroup>
+                                <col style="width:18%">
+                                <col style="width:11%">
+                                <col style="width:18%">
+                                <col style="width:11%">
+                                <col style="width:16%">
+                                <col style="width:16%">
+                                <col style="width:10%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>CIF</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Dirección</th>
+                                    <th>Departamentos</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-admin-prov">
+                                <tr><td colspan="7" class="tabla-vacia">Cargando…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div><!-- /tab-lista-admin -->
+        </div><!-- /seccion-admin -->
+
+
+        <!-- ══════════════════════════════════════════════════════
+             SECCIÓN CONTABLE: filtro + tabla (solo lectura)
+        ══════════════════════════════════════════════════════ -->
+        <div id="seccion-contable" style="display:none;">
+
+            <section class="chart-card filtro-prov-card">
+                <div class="filtro-prov-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         style="width:16px;height:16px;flex-shrink:0;">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <label class="filtro-prov-label" for="cont-filtro-dept">Departamento</label>
+                    <select id="cont-filtro-dept" class="input-select filtro-prov-select"
+                            onchange="contFiltrarDept()">
+                        <option value="">Todos los departamentos</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="chart-card orden-table-card">
+                <h2 class="chart-title">Directorio de Proveedores</h2>
+                <div class="table-container">
+                    <table class="data-table">
+                        <colgroup>
+                            <col style="width:22%">
+                            <col style="width:13%">
+                            <col style="width:22%">
+                            <col style="width:13%">
+                            <col style="width:30%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th>CIF</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-cont-prov">
+                            <tr><td colspan="5" class="tabla-vacia">Cargando…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div><!-- /seccion-contable -->
+
+
+        <!-- ══════════════════════════════════════════════════════
+             SECCIÓN JEFE DE DEPARTAMENTO: solo sus proveedores
+        ══════════════════════════════════════════════════════ -->
+        <div id="seccion-jefe" style="display:none;">
+
+            <section class="chart-card orden-table-card">
+                <h2 class="chart-title">Mis Proveedores</h2>
+                <div class="table-container">
+                    <table class="data-table">
+                        <colgroup>
+                            <col style="width:22%">
+                            <col style="width:13%">
+                            <col style="width:22%">
+                            <col style="width:13%">
+                            <col style="width:30%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th>CIF</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-jefe-prov">
+                            <tr><td colspan="5" class="tabla-vacia">Cargando…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div><!-- /seccion-jefe -->
+
+    </div><!-- /menu-container -->
 
     <script src="js/Proveedores.js"></script>
-
 </body>
-
 </html>

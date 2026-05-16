@@ -54,6 +54,52 @@ public class InvoiceDAO {
         }
     }
 
+    // ── Factura por ID (incluye PDF) ─────────────────────────
+    public Invoice findById(int codeInvoice) throws SQLException {
+        String sql = "SELECT * FROM invoice WHERE Code_invoice = ?";
+        try (Connection con = ConexionBD.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, codeInvoice);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? map(rs) : null;
+            }
+        }
+    }
+
+    // ── Metadatos de facturas de una orden (sin BLOB) ────────
+    public List<Invoice> findByOrderMeta(int codeOrder) throws SQLException {
+        String sql = "SELECT Code_invoice, Date, Total_amount, Code_order " +
+                     "FROM invoice WHERE Code_order = ? ORDER BY Date DESC";
+        try (Connection con = ConexionBD.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, codeOrder);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Invoice> list = new ArrayList<>();
+                while (rs.next()) {
+                    Invoice inv = new Invoice();
+                    inv.setCodeInvoice(rs.getInt("Code_invoice"));
+                    inv.setDate(rs.getTimestamp("Date"));
+                    inv.setTotalAmount(rs.getBigDecimal("Total_amount"));
+                    inv.setCodeOrder(nullableInt(rs, "Code_order"));
+                    list.add(inv);
+                }
+                return list;
+            }
+        }
+    }
+
+    // ── Contar facturas de una orden ─────────────────────────
+    public int countByOrder(int codeOrder) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM invoice WHERE Code_order = ?";
+        try (Connection con = ConexionBD.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, codeOrder);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        }
+    }
+
     // ── Eliminar factura ─────────────────────────────────────
     public void deleteInvoice(int codeInvoice) throws SQLException {
         String sql = "DELETE FROM invoice WHERE Code_invoice = ?";

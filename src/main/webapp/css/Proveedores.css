@@ -115,11 +115,102 @@
     border-color: #c70303;
 }
 
+/* ── Tabs (admin) ── */
+.tabs-card {
+    padding: 0 24px !important;
+    border-radius: 20px 20px 0 0 !important;
+    margin-bottom: 0 !important;
+    box-shadow: none !important;
+}
+
+.tabs-bar {
+    display: flex;
+    gap: 4px;
+    border-bottom: 2px solid rgba(199, 3, 3, 0.15);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 14px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #999;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.tab-btn.active {
+    color: #c70303;
+    border-bottom-color: #c70303;
+}
+
+.tab-btn:hover:not(.active) {
+    color: #555;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* ── Fila de filtro proveedores ── */
+.filtro-prov-card {
+    padding: 14px 24px !important;
+}
+
+.filtro-prov-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filtro-prov-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    white-space: nowrap;
+}
+
+.filtro-prov-select {
+    max-width: 280px;
+}
+
+/* ── Celda de acciones (admin) ── */
+.acciones-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.acciones-cell .sel-asignar {
+    flex: 1;
+}
+
+/* ── Etiqueta campo obligatorio ── */
+.campo-obligatorio {
+    color: #c70303;
+    font-size: 12px;
+}
+
 /* ── Responsivo ── */
 @media (max-width: 768px) {
     .chart-card table thead th,
     .chart-card table tbody td {
         padding: 8px 6px;
         font-size: 13px;
+    }
+
+    .acciones-cell {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
